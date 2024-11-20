@@ -57,6 +57,7 @@ class InitFeatures {
         // Initialize Shoutbox functions
         new PriorityUsers();
         new PriorityStyle();
+        new SelfStyle();
         new MutedUsers();
         new ReplySimple();
         new ReplyQuote();

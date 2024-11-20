@@ -279,8 +279,12 @@ class ProcessShouts {
         } else if (usertype === 'mute') {
             shoutElem.classList.add('mp_muted');
         } else if (usertype === 'mention') {
-            shoutElem.style.backgroundColor = 'rgba(255, 223, 186, 0.6)'; // Light orange highlight
-            shoutElem.style.border = '1px solid rgba(255, 165, 0, 0.9)'; // Darker orange border
+            // Apply styling for posts that mention your username
+            const customStyle: string | undefined = GM_getValue('selfStyle_val');
+            shoutElem.style.background = customStyle
+                ? `hsla(${customStyle})`
+                : 'hsla(266,75%,63%,0.25)';
+            shoutElem.style.border = '1px solid hsla(266, 75%, 63%, 0.9)';
         }
     }
 
@@ -348,6 +352,37 @@ class PriorityStyle implements Feature {
 
     private async _init() {
         console.log(`[M+] Setting custom highlight for priority users...`);
+    }
+
+    get settings(): TextboxSetting {
+        return this._settings;
+    }
+}
+
+/**
+ * Allows a custom background to be applied to messages that mention your username
+ */
+class SelfStyle implements Feature {
+    private _settings: TextboxSetting = {
+        scope: SettingGroup.Shoutbox,
+        type: 'textbox',
+        title: 'selfStyle',
+        tag: 'Self Emphasis',
+        placeholder: 'default: 266, 75%, 63%, 0.25',
+        desc: `Change the color/opacity of the highlighting rule for posts containing your username. (<em>This is formatted as Hue (0-360), Saturation (0-100%), Lightness (0-100%), Opacity (0-1)</em>)`,
+    };
+    private _tar: string = '.sbf div';
+
+    constructor() {
+        Util.startFeature(this._settings, this._tar, ['shoutbox', 'home']).then((t) => {
+            if (t) {
+                this._init();
+            }
+        });
+    }
+
+    private async _init() {
+        console.log(`[M+] Setting custom highlight for posts containing your username...`);
     }
 
     get settings(): TextboxSetting {
