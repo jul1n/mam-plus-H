@@ -602,7 +602,7 @@ class StyleMention implements Feature {
     private async _init() {
         // Extract username from DOM before initializing the shoutbox watcher
         this._mentionName = this._extractUsername();
-        console.log(this._mentionName)
+        console.log('🛠️',this._mentionName)
         if (this._mentionName) {
             ProcessShouts.watchShoutbox(this._tar, undefined, undefined, this._mentionName);
         } else {
@@ -619,13 +619,13 @@ class StyleMention implements Feature {
             const clone = userMenuElement.cloneNode(true) as HTMLElement;
 
             // Remove the <img> tag to isolate the username text
-            const img = clone.querySelector("img");
+            const img = clone.querySelector('img');
             if (img) {
                 clone.removeChild(img);
             }
 
-            // Trim any extra whitespace and return the username
-            return clone.textContent?.trim() || null;
+            // Trim the "↓" and any extra whitespace and return the username
+            return clone.textContent?.slice(0, -1).trim() || null;
         }
 
         console.error("User menu element not found.");
