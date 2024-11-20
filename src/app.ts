@@ -35,6 +35,7 @@ namespace MP {
             '🆕: Added ability to emphasize/block users from shoutbox menu. Gracias @sherman76400!',
             '🆕: Display UIDs in shoutbox. Merci @sherman76400!',
             '🆕: Style mentions of your username in shoutbox. Danke @sherman76400!',
+            '♻️: Added a counter when items are hidden. Grazzi @sherman76400!',
         ] as string[],
         BUG_LIST: [] as string[],
     };
