@@ -471,7 +471,7 @@ class GiftButton implements Feature {
             const giftButton: HTMLSpanElement = document.createElement('span');
             giftButton.setAttribute('id', 'giftButton');
             //create the button element as well as a text element for value of gift. Populate with value from settings
-            giftButton.innerHTML = `<button>Gift: </button><span>&nbsp;</span><input type="text" size="3" id="mp_giftValue" title="Value between 5 and 1000" value="${giftValueSetting}">`;
+            giftButton.innerHTML = `<button>🎁Gift: </button><span>&nbsp;</span><input type="text" size="3" id="mp_giftValue" title="Value between 5 and 1000" value="${giftValueSetting}">`;
             //add gift element with button and text to the menu
             popupMenu!.childNodes[0].appendChild(giftButton);
             //add event listener for when gift button is clicked
@@ -557,7 +557,7 @@ class StyleMention implements Feature {
         scope: SettingGroup.Shoutbox,
         type: 'checkbox',
         title: 'styleMention',
-        desc: `styles mentions of your username`,
+        desc: `Style mentions of your username`,
     };
     private _tar: string = '.sbf div';
     private _mentionName: string | null = null; // Dynamically set mention name
@@ -573,7 +573,6 @@ class StyleMention implements Feature {
     private async _init() {
         // Extract username from DOM before initializing the shoutbox watcher
         this._mentionName = this._extractUsername();
-        console.log('🛠️',this._mentionName)
         if (this._mentionName) {
             ProcessShouts.watchShoutbox(this._tar, undefined, undefined, this._mentionName);
         } else {
@@ -1046,10 +1045,10 @@ class AddToLists implements Feature {
             scope: SettingGroup.Shoutbox,
             type: 'checkbox',
             title: 'Add users to lists',
-            desc: `Places add friend, block and Emphasize buttons in Shoutbox dot-menu`,
+            desc: `Places add friend, block, mute, and emphasize buttons in Shoutbox dot-menu`,
         };
     private _tar: string = '.sbf';
-    private _priorityUsers: string[] = [];
+    private _addUsers: string[] = [];
 
         constructor() {
             Util.startFeature(this._settings, this._tar, ['shoutbox', 'home']).then((t) => {
@@ -1101,28 +1100,35 @@ class AddToLists implements Feature {
                 popupMenu.querySelectorAll('.custom-button').forEach(button => button.remove());
 
                 // Use the addButtonToSubMenu function to add each button with specific actions
-                this.addButtonToSubMenu(popupMenu, "Add Friend", () => {
+                this._addButtonToSubMenu(popupMenu, "💖Add Friend", () => {
                     const addFriendUrl = `https://www.myanonamouse.net/friends.php?action=add&type=friend&targetid=${userName}`;
                     window.open(addFriendUrl, '_blank');
                 });
 
-                this.addButtonToSubMenu(popupMenu, "Block", () => {
+                this._addButtonToSubMenu(popupMenu, "🚫Block", () => {
                     const blockUrl = `https://www.myanonamouse.net/friends.php?action=add&type=block&targetid=${userName}`;
                     window.open(blockUrl, '_blank');
                 });
                 /* TODO: Emphasize list is only loaded on page reload, fina a way to reload after list updated
                 * Check if priorityUsers is true or not if not set it to true
                 * */
-                this.addButtonToSubMenu(popupMenu, "Emphasize", () => {
-                    this._add(userName);
-                    this.enablePriorityUsers()
-                    console.log("Emphasize clicked");
+                this._addButtonToSubMenu(popupMenu, "🔊Emphasize", () => {
+                    this._add(userName,'priority');
+                    this._enablePriorityUsers()
+                    if(MP.DEBUG) console.log("Emphasize clicked");
+                });
+
+                /* Check if mutedUsers is true or not if not set it to true */
+                this._addButtonToSubMenu(popupMenu, "🔇Mute", () => {
+                    this._add(userName,'muted');
+                    this._enableMutedUsers()
+                    if(MP.DEBUG) console.log("Mute clicked");
                 });
 
                 console.log(`[M+] Custom buttons added successfully.`);
             });
         }
-    private enablePriorityUsers() {
+    private _enablePriorityUsers() {
             const key = 'priorityUsers';
 
             // Retrieve the current value or default to false
@@ -1132,40 +1138,52 @@ class AddToLists implements Feature {
             if (!currentValue) {
                 // Set the value to true
                 GM_setValue(key, true);
-                console.log(`[UserManager] '${key}' was false and has been set to true.`);
+                if(MP.DEBUG) console.log(`[UserManager] '${key}' was false and has been set to true.`);
             } else {
-                console.log(`[UserManager] '${key}' is already true.`);
+                if(MP.DEBUG) console.log(`[UserManager] '${key}' is already true.`);
             }
         }
 
-        // Function to add a username to _priorityUsers if not already present and save it directly
-    private async _add(userName: string) {
+    private _enableMutedUsers(){
+        const key = 'mutedUsers';
+        let currentValue = GM_getValue(key, false);
+        if (!currentValue){
+            GM_setValue(key, true);
+            if (MP.DEBUG) console.log(`[UserManager] '${key}' was false and has been set to true.`);
+        }else{
+            if (MP.DEBUG) console.log(`[UserManager] '${key}' is already true.`);
+        }
+    }
+
+        // Function to add a username to priorityUsers or mutedUsers if not already present and save it directly
+    private async _add(userName: string, tar:'priority'|'muted') {
             // Load the current list from storage, initialize as empty array if not yet created
-            const gmValue: string | undefined = GM_getValue(`priorityUsers_val`);
+            const gmValue: string | undefined = GM_getValue(`${tar}Users_val`);
 
             // Convert CSV to array if gmValue exists; otherwise, start with an empty array
-            this._priorityUsers = gmValue ? await Util.csvToArray(gmValue) : [];
+            this._addUsers = gmValue ? await Util.csvToArray(gmValue) : [];
 
             // Check if the user is already in _priorityUsers
-            if (!this._priorityUsers.includes(userName)) {
+            if (!this._addUsers.includes(userName)) {
                 // Add the new user to the array
-                this._priorityUsers.push(userName);
+                this._addUsers.push(userName);
 
                 // Convert the updated array to CSV format
-                const updatedCsv = this._priorityUsers.join(',');
+                const updatedCsv = this._addUsers.join(',');
 
                 // Save the CSV string back to storage to persist changes
-                GM_setValue(`priorityUsers_val`, updatedCsv);
+                GM_setValue(`${tar}Users_val`, updatedCsv);
                 console.log(`User ${userName} added to _priorityUsers and saved.`);
-                this.addMessage(`Added to emphasize list, reload required`);
+                this._addMessage(`Added to ${tar} list, reload required`);
             } else {
-                console.log(`User ${userName} is already in the _priorityUsers list.`);
-                this.addMessage(`User already in emphasize list`);
+                console.log(`User ${userName} is already in the ${tar}Users list.`);
+                // TODO: Remove user if they are already in the list, making the button into a toggle
+                this._addMessage(`User already in ${tar} list`);
             }
         }
 
         // Simple function to add a message to the shoutbox
-    private addMessage(text: string) {
+    private _addMessage(text: string) {
             // Locate the main shoutbox div
             const sbfDiv = document.getElementById('sbf');
             const sbfDivChild = sbfDiv!.firstChild;
@@ -1187,7 +1205,7 @@ class AddToLists implements Feature {
             }
         }
 
-    private addButtonToSubMenu(menu: HTMLElement, label: string, onClick: () => void) {
+    private _addButtonToSubMenu(menu: HTMLElement, label: string, onClick: () => void) {
             /* TODO: Generalise and move to util, make GiftButton use it. */
             const buttonContainer = document.createElement('span');
             buttonContainer.classList.add('custom-button'); // Class for easy debugging and removal if needed
