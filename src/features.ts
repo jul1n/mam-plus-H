@@ -62,6 +62,9 @@ class InitFeatures {
         new ReplyQuote();
         new GiftButton();
         new QuickShout();
+        new AddUID();
+        new AddToLists();
+        new StyleMention();
 
         // Initialize Vault functions
         new SimpleVault();
@@ -70,7 +73,6 @@ class InitFeatures {
         // Initialize User Page functions
         new UserGiftDefault();
         new UserGiftHistory();
-        new Notes();
 
         // Initialize Forum Page functions
         new ForumFLGift();
