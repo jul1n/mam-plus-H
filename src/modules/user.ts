@@ -261,7 +261,7 @@ class Notes implements Feature {
 
             const userID = window.location.pathname.match(/\/u\/(\d+)/)?.[1];
             if (!userID) {
-                console.error("User ID not found in URL.");
+                console.error('User ID not found in URL.');
                 return;
             }
 
@@ -313,7 +313,6 @@ class Notes implements Feature {
             console.error('Table with class "coltable" not found.');
         }
     }
-
 
     get settings(): CheckboxSetting {
         return this._settings;

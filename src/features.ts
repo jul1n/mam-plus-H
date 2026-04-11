@@ -57,11 +57,15 @@ class InitFeatures {
         // Initialize Shoutbox functions
         new PriorityUsers();
         new PriorityStyle();
+        new SelfStyle();
         new MutedUsers();
-        new ReplySimple();
-        new ReplyQuote();
+        // new ReplySimple();
+        // new ReplyQuote(); /* TODO: Remove these functions completely */
         new GiftButton();
         new QuickShout();
+        new AddUID();
+        new AddToLists();
+        new StyleMention();
 
         // Initialize Vault functions
         new SimpleVault();

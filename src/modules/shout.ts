@@ -7,11 +7,13 @@ class ProcessShouts {
      * @param tar The shoutbox element selector
      * @param names (Optional) List of usernames/IDs to filter for
      * @param usertype (Optional) What filter the names are for. Required if `names` is provided
+     * @param mentionName (Optional) A specific username to style when mentioned
      */
     public static watchShoutbox(
         tar: string,
         names?: string[],
-        usertype?: ShoutboxUserType
+        usertype?: ShoutboxUserType,
+        mentionName?: string
     ): void {
         // Observe the shoutbox
         Check.elemObserver(
@@ -31,14 +33,14 @@ class ProcessShouts {
                         ) {
                             return;
                         }
+
                         // If we're looking for specific users...
-                        if (names !== undefined && names.length > 0) {
-                            if (usertype === undefined) {
-                                throw new Error(
-                                    'Usertype must be defined if filtering names!'
-                                );
-                            }
-                            // Extract
+                        if (mentionName && nodeData.textContent?.includes(`@${mentionName}`)) {
+                            this.styleShout(node, 'mention');
+                        }
+
+                        // Only apply name filtering if names and usertype are defined
+                        if (names && names.length > 0 && usertype) {
                             const userID: string = this.extractFromShout(
                                 node,
                                 'a[href^="/u/"]',
@@ -49,12 +51,10 @@ class ProcessShouts {
                                 'a > span',
                                 'text'
                             );
-                            // Filter
+
+                            // Apply styles if any of the names match
                             names.forEach((name) => {
-                                if (
-                                    `/u/${name}` === userID ||
-                                    Util.caselessStringMatch(name, userName)
-                                ) {
+                                if (`/u/${name}` === userID || Util.caselessStringMatch(name, userName)) {
                                     this.styleShout(node, usertype);
                                 }
                             });
@@ -133,80 +133,51 @@ class ProcessShouts {
                         }
 
                         // Select the name information
-                        const shoutName: HTMLSpanElement | null = Util.nodeToElem(
-                            node
-                        ).querySelector('a[href^="/u/"] span');
-                        // Grab the background color of the name, or text color
+                        const shoutName: HTMLSpanElement | null = nodeData.querySelector(
+                            'a[href^="/u/"] span'
+                        );
+                        const userName: string = this.extractFromShout(node, 'a > span', 'text');
+                        const userID: string = this.extractFromShout(node, 'a[href^="/u/"]', 'href');
+
+                        // If buttons === 3, add UID next to the username
+                        if (buttons === 3 && shoutName && userID) {
+                            const uid = userID.match(/\d+/g)?.join('');
+                            if (uid && !shoutName.textContent!.includes(`[${uid}]`)) {
+                                shoutName.textContent += ` [${uid}]`;
+                            }
+                        }
+
+                        // Fetch color information
                         const nameColor: string | null = _getNameColor(shoutName);
-                        //extract the username from node for use in reply
-                        const userName: string = this.extractFromShout(
-                            node,
-                            'a > span',
-                            'text'
-                        );
-                        const userID: string = this.extractFromShout(
-                            node,
-                            'a[href^="/u/"]',
-                            'href'
-                        );
-                        //create a span element to be body of button added to page - button uses relative node context at click time to do calculations
-                        const replyButton: HTMLSpanElement = document.createElement(
-                            'span'
-                        );
-                        //if this is a ReplySimple request, then create Reply Simple button
-                        if (buttons === 1) {
-                            //create button with onclick action of setting sb text field to username with potential color block with a colon and space to reply, focus cursor in text box
-                            replyButton.innerHTML = '<button>\u293a</button>';
-                            replyButton
-                                .querySelector('button')!
-                                .addEventListener('click', () => {
-                                    // Add the styled name tag to the reply box
-                                    // If nothing was in the reply box, add a colon
+
+                        // Only create reply or quote buttons if buttons === 1 or buttons === 2
+                        if (buttons === 1 || buttons === 2) {
+                            const replyButton: HTMLSpanElement = document.createElement('span');
+                            if (buttons === 1) {
+                                replyButton.innerHTML = '<button>\u293a</button>';
+                                replyButton.querySelector('button')!.addEventListener('click', () => {
                                     if (replyBox.value === '') {
-                                        replyBox.value = `${_makeNameTag(
-                                            userName,
-                                            nameColor,
-                                            userID
-                                        )}: `;
+                                        replyBox.value = `${_makeNameTag(userName, nameColor, userID)}: `;
                                     } else {
-                                        replyBox.value = `${
-                                            replyBox.value
-                                        } ${_makeNameTag(userName, nameColor, userID)} `;
+                                        replyBox.value = `${replyBox.value} ${_makeNameTag(userName, nameColor, userID)} `;
                                     }
                                     replyBox.focus();
                                 });
-                        }
-                        //if this is a replyQuote request, then create reply quote button
-                        else if (buttons === 2) {
-                            //create button with onclick action of getting that line's text, stripping down to 65 char with no word break, then insert into SB text field, focus cursor in text box
-                            replyButton.innerHTML = '<button>\u293d</button>';
-                            replyButton
-                                .querySelector('button')!
-                                .addEventListener('click', () => {
+                            } else if (buttons === 2) {
+                                replyButton.innerHTML = '<button>\u293d</button>';
+                                replyButton.querySelector('button')!.addEventListener('click', () => {
                                     const text = this.quoteShout(node, 65);
                                     if (text !== '') {
-                                        // Add quote to reply box
-                                        replyBox.value = `${_makeNameTag(
-                                            userName,
-                                            nameColor,
-                                            userID
-                                        )}: \u201c[i]${text}[/i]\u201d `;
-                                        replyBox.focus();
+                                        replyBox.value = `${_makeNameTag(userName, nameColor, userID)}: \u201c[i]${text}[/i]\u201d `;
                                     } else {
-                                        // Just reply
-                                        replyBox.value = `${_makeNameTag(
-                                            userName,
-                                            nameColor,
-                                            userID
-                                        )}: `;
-                                        replyBox.focus();
+                                        replyBox.value = `${_makeNameTag(userName, nameColor, userID)}: `;
                                     }
+                                    replyBox.focus();
                                 });
+                            }
+                            replyButton.setAttribute('class', 'mp_replyButton');
+                            node.insertBefore(replyButton, node.childNodes[2]);
                         }
-                        //give span an ID for potential use later
-                        replyButton.setAttribute('class', 'mp_replyButton');
-                        //insert button prior to username or another button
-                        node.insertBefore(replyButton, node.childNodes[2]);
                     });
                 });
             },
@@ -304,15 +275,19 @@ class ProcessShouts {
         const shoutElem: HTMLElement = Util.nodeToElem(shout);
         if (usertype === 'priority') {
             const customStyle: string | undefined = GM_getValue('priorityStyle_val');
-            if (customStyle) {
-                shoutElem.style.background = `hsla(${customStyle})`;
-            } else {
-                shoutElem.style.background = 'hsla(0,0%,50%,0.3)';
-            }
+            shoutElem.style.background = customStyle ? `hsla(${customStyle})` : 'hsla(0,0%,50%,0.3)';
         } else if (usertype === 'mute') {
             shoutElem.classList.add('mp_muted');
+        } else if (usertype === 'mention') {
+            // Apply styling for posts that mention your username
+            const customStyle: string | undefined = GM_getValue('selfStyle_val');
+            shoutElem.style.background = customStyle
+                ? `hsla(${customStyle})`
+                : 'hsla(266,75%,63%,0.25)';
+            shoutElem.style.border = '1px solid hsla(266, 75%, 63%, 0.9)';
         }
     }
+
 }
 
 class PriorityUsers implements Feature {
@@ -377,6 +352,37 @@ class PriorityStyle implements Feature {
 
     private async _init() {
         console.log(`[M+] Setting custom highlight for priority users...`);
+    }
+
+    get settings(): TextboxSetting {
+        return this._settings;
+    }
+}
+
+/**
+ * Allows a custom background to be applied to messages that mention your username
+ */
+class SelfStyle implements Feature {
+    private _settings: TextboxSetting = {
+        scope: SettingGroup.Shoutbox,
+        type: 'textbox',
+        title: 'selfStyle',
+        tag: 'Self Emphasis',
+        placeholder: 'default: 266, 75%, 63%, 0.25',
+        desc: `Change the color/opacity of the highlighting rule for posts containing your username. (<em>This is formatted as Hue (0-360), Saturation (0-100%), Lightness (0-100%), Opacity (0-1)</em>)`,
+    };
+    private _tar: string = '.sbf div';
+
+    constructor() {
+        Util.startFeature(this._settings, this._tar, ['shoutbox', 'home']).then((t) => {
+            if (t) {
+                this._init();
+            }
+        });
+    }
+
+    private async _init() {
+        console.log(`[M+] Setting custom highlight for posts containing your username...`);
     }
 
     get settings(): TextboxSetting {
@@ -500,7 +506,7 @@ class GiftButton implements Feature {
             const giftButton: HTMLSpanElement = document.createElement('span');
             giftButton.setAttribute('id', 'giftButton');
             //create the button element as well as a text element for value of gift. Populate with value from settings
-            giftButton.innerHTML = `<button>Gift: </button><span>&nbsp;</span><input type="text" size="3" id="mp_giftValue" title="Value between 5 and 1000" value="${giftValueSetting}">`;
+            giftButton.innerHTML = `<button>🎁Gift: </button><span>&nbsp;</span><input type="text" size="3" id="mp_giftValue" title="Value between 5 and 1000" value="${giftValueSetting}">`;
             //add gift element with button and text to the menu
             popupMenu!.childNodes[0].appendChild(giftButton);
             //add event listener for when gift button is clicked
@@ -579,6 +585,64 @@ class GiftButton implements Feature {
 }
 
 /**
+ * Style mentions of your username
+ */
+class StyleMention implements Feature {
+    private _settings: CheckboxSetting = {
+        scope: SettingGroup.Shoutbox,
+        type: 'checkbox',
+        title: 'styleMention',
+        desc: `Style mentions of your username`,
+    };
+    private _tar: string = '.sbf div';
+    private _mentionName: string | null = null; // Dynamically set mention name
+
+    constructor() {
+        Util.startFeature(this._settings, this._tar, ['shoutbox', 'home']).then((t) => {
+            if (t) {
+                this._init();
+            }
+        });
+    }
+
+    private async _init() {
+        // Extract username from DOM before initializing the shoutbox watcher
+        this._mentionName = this._extractUsername();
+        if (this._mentionName) {
+            ProcessShouts.watchShoutbox(this._tar, undefined, undefined, this._mentionName);
+        } else {
+            console.warn("Could not find username for mention styling.");
+        }
+    }
+
+    private _extractUsername(): string | null {
+        // Select the anchor element by its id
+        const userMenuElement = document.getElementById("userMenu");
+
+        if (userMenuElement) {
+            // Clone the element to manipulate without affecting the DOM
+            const clone = userMenuElement.cloneNode(true) as HTMLElement;
+
+            // Remove the <img> tag to isolate the username text
+            const img = clone.querySelector('img');
+            if (img) {
+                clone.removeChild(img);
+            }
+
+            // Trim the "↓" and any extra whitespace and return the username
+            return clone.textContent?.slice(0, -1).trim() || null;
+        }
+
+        console.error("User menu element not found.");
+        return null;
+    }
+
+    get settings(): CheckboxSetting {
+        return this._settings;
+    }
+}
+
+/**
  * Allows Reply button to be added to Shout
  */
 class ReplySimple implements Feature {
@@ -635,6 +699,38 @@ class ReplyQuote implements Feature {
     private async _init() {
         ProcessShouts.watchShoutboxReply(this._tar, this._replyQuote);
         console.log(`[M+] Adding Reply with Quote Button...`);
+    }
+
+    get settings(): CheckboxSetting {
+        return this._settings;
+    }
+}
+
+/**
+ * adds UID to Shout
+ */
+class AddUID implements Feature {
+    private _settings: CheckboxSetting = {
+        scope: SettingGroup.Shoutbox,
+        type: 'checkbox',
+        title: 'addUID',
+        //tag: "Reply",
+        desc: `Places the users UID next to the name`,
+    };
+    private _tar: string = '.sbf div';
+    private _replySimple: number = 3;
+
+    constructor() {
+        Util.startFeature(this._settings, this._tar, ['shoutbox', 'home']).then((t) => {
+            if (t) {
+                this._init();
+            }
+        });
+    }
+
+    private async _init() {
+        ProcessShouts.watchShoutboxReply(this._tar, this._replySimple);
+        console.log(`[M+] Adding UID Button...`);
     }
 
     get settings(): CheckboxSetting {
@@ -824,10 +920,10 @@ class QuickShout implements Feature {
                     //fun way to dynamically create statements - this takes whatever is in list field to create a key with that text and the value from the textarea
                     eval(
                         `jsonList.` +
-                            replacedText +
-                            `= "` +
-                            encodeURIComponent(quickShoutText.value) +
-                            `";`
+                        replacedText +
+                        `= "` +
+                        encodeURIComponent(quickShoutText.value) +
+                        `";`
                     );
                     //overwrite or create the GM variable with new jsonList
                     GM_setValue('mp_quickShout', JSON.stringify(jsonList));
@@ -973,6 +1069,194 @@ class QuickShout implements Feature {
         shoutFoot.appendChild(comboBoxDiv);
         shoutFoot.appendChild(quickShoutText);
     }
+
+    get settings(): CheckboxSetting {
+        return this._settings;
+    }
+}
+
+class AddToLists implements Feature {
+    private _settings: CheckboxSetting = {
+            scope: SettingGroup.Shoutbox,
+            type: 'checkbox',
+            title: 'Add users to lists',
+            desc: `Places add friend, block, mute, and emphasize buttons in Shoutbox dot-menu`,
+        };
+    private _tar: string = '.sbf';
+    private _addUsers: string[] = [];
+
+        constructor() {
+            Util.startFeature(this._settings, this._tar, ['shoutbox', 'home']).then((t) => {
+                if (t) {
+                    this._init();
+                }
+            });
+        }
+
+    private async _init() {
+            console.log(`[M+] Initialized Buttons.`);
+            const sbfDiv = <HTMLDivElement>document.getElementById('sbf')!;
+
+            // Add event listener for any click in the sbf div
+            sbfDiv.addEventListener('click', async (e) => {
+                const target = e.target as HTMLElement;
+                const sbMenuElem = target.closest('.sb_menu');
+
+                // Only proceed if the target is the triple dot menu in shoutbox
+                if (!sbMenuElem) return;
+
+                // Get the Menu after it pops up
+                console.log(`[M+] Attempting to Add Custom Buttons...`);
+                const popupMenu: HTMLElement | null = document.getElementById('sbMenuMain');
+                do {
+                    await Util.sleep(5);
+                } while (!popupMenu!.hasChildNodes());
+                //get the user details from the popup menu details
+                const popupUser: HTMLElement = Util.nodeToElem(popupMenu!.childNodes[0]);
+
+                if (!popupMenu || !popupUser) {
+                    console.warn(`[M+] Popup menu or user element not found.`);
+                    return;
+                }
+
+                const userName: string = popupUser.getAttribute('data-uid')!;
+                if (!userName) {
+                    console.warn(`[M+] User ID not found.`);
+                    return;
+                }
+
+                do {
+                    await Util.sleep(5);
+                } while (!popupMenu?.hasChildNodes());
+
+                console.log(`[M+] Popup menu located, adding buttons...`);
+
+                // Clear previous buttons to avoid duplicates
+                popupMenu.querySelectorAll('.custom-button').forEach(button => button.remove());
+
+                // Use the addButtonToSubMenu function to add each button with specific actions
+                this._addButtonToSubMenu(popupMenu, "💖Add Friend", () => {
+                    const addFriendUrl = `https://www.myanonamouse.net/friends.php?action=add&type=friend&targetid=${userName}`;
+                    window.open(addFriendUrl, '_blank');
+                });
+
+                this._addButtonToSubMenu(popupMenu, "🚫Block", () => {
+                    const blockUrl = `https://www.myanonamouse.net/friends.php?action=add&type=block&targetid=${userName}`;
+                    window.open(blockUrl, '_blank');
+                });
+                /* TODO: Emphasize list is only loaded on page reload, fina a way to reload after list updated
+                * Check if priorityUsers is true or not if not set it to true
+                * */
+                this._addButtonToSubMenu(popupMenu, "🔊Emphasize", () => {
+                    this._add(userName,'priority');
+                    this._enablePriorityUsers()
+                    if(MP.DEBUG) console.log("Emphasize clicked");
+                });
+
+                /* Check if mutedUsers is true or not if not set it to true */
+                this._addButtonToSubMenu(popupMenu, "🔇Mute", () => {
+                    this._add(userName,'muted');
+                    this._enableMutedUsers()
+                    if(MP.DEBUG) console.log("Mute clicked");
+                });
+
+                console.log(`[M+] Custom buttons added successfully.`);
+            });
+        }
+    private _enablePriorityUsers() {
+            const key = 'priorityUsers';
+
+            // Retrieve the current value or default to false
+            let currentValue = GM_getValue(key, false);
+
+            // Check if the value is false
+            if (!currentValue) {
+                // Set the value to true
+                GM_setValue(key, true);
+                if(MP.DEBUG) console.log(`[UserManager] '${key}' was false and has been set to true.`);
+            } else {
+                if(MP.DEBUG) console.log(`[UserManager] '${key}' is already true.`);
+            }
+        }
+
+    private _enableMutedUsers(){
+        const key = 'mutedUsers';
+        let currentValue = GM_getValue(key, false);
+        if (!currentValue){
+            GM_setValue(key, true);
+            if (MP.DEBUG) console.log(`[UserManager] '${key}' was false and has been set to true.`);
+        }else{
+            if (MP.DEBUG) console.log(`[UserManager] '${key}' is already true.`);
+        }
+    }
+
+        // Function to add a username to priorityUsers or mutedUsers if not already present and save it directly
+    private async _add(userName: string, tar:'priority'|'muted') {
+            // Load the current list from storage, initialize as empty array if not yet created
+            const gmValue: string | undefined = GM_getValue(`${tar}Users_val`);
+
+            // Convert CSV to array if gmValue exists; otherwise, start with an empty array
+            this._addUsers = gmValue ? await Util.csvToArray(gmValue) : [];
+
+            // Check if the user is already in _priorityUsers
+            if (!this._addUsers.includes(userName)) {
+                // Add the new user to the array
+                this._addUsers.push(userName);
+
+                // Convert the updated array to CSV format
+                const updatedCsv = this._addUsers.join(',');
+
+                // Save the CSV string back to storage to persist changes
+                GM_setValue(`${tar}Users_val`, updatedCsv);
+                console.log(`User ${userName} added to _priorityUsers and saved.`);
+                this._addMessage(`Added to ${tar} list, reload required`);
+            } else {
+                console.log(`User ${userName} is already in the ${tar}Users list.`);
+                // TODO: Remove user if they are already in the list, making the button into a toggle
+                this._addMessage(`User already in ${tar} list`);
+            }
+        }
+
+        // Simple function to add a message to the shoutbox
+    private _addMessage(text: string) {
+            // Locate the main shoutbox div
+            const sbfDiv = document.getElementById('sbf');
+            const sbfDivChild = sbfDiv!.firstChild;
+
+            if (sbfDiv) {
+                // Create a new div for the message
+                const messageDiv = document.createElement('div');
+                messageDiv.setAttribute('id', 'mp_giftStatusElem');
+                sbfDivChild!.appendChild(messageDiv);
+
+                // Create and append a text node with the provided message
+                messageDiv.appendChild(document.createTextNode(text));
+                messageDiv.classList.add('mp_success');
+
+                // Scroll the shoutbox to the bottom to show the new message
+                sbfDiv.scrollTop = sbfDiv.scrollHeight;
+            } else {
+                console.warn('[M+] Shoutbox div not found!');
+            }
+        }
+
+    private _addButtonToSubMenu(menu: HTMLElement, label: string, onClick: () => void) {
+            /* TODO: Generalise and move to util, make GiftButton use it. */
+            const buttonContainer = document.createElement('span');
+            buttonContainer.classList.add('custom-button'); // Class for easy debugging and removal if needed
+            const button = document.createElement('button');
+            button.innerText = label;
+
+            // Set up button click event
+            button.addEventListener('click', onClick);
+
+            // Append elements to container
+            buttonContainer.appendChild(button);
+            buttonContainer.appendChild(document.createTextNode(' '));
+
+            // Append buttonContainer to the first child of the menu or fallback to the menu itself
+            (menu.childNodes[0] || menu).appendChild(buttonContainer);
+        }
 
     get settings(): CheckboxSetting {
         return this._settings;

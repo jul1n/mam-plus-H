@@ -18,6 +18,7 @@ class ToggleSnatched implements Feature {
     private _searchList: NodeListOf<HTMLTableRowElement> | undefined;
     private _snatchedHook: string = 'td div[class^="browse"]';
     private _share: Shared = new Shared();
+    private _snatchedCount = 0;
 
     constructor() {
         Util.startFeature(this._settings, this._tar, ['browse']).then((t) => {
@@ -41,34 +42,34 @@ class ToggleSnatched implements Feature {
             this._setVisState(true);
         }
 
-        const toggleText: string = this._isVisible ? 'Hide Snatched' : 'Show Snatched';
+        const toggleText: string = this._isVisible
+            ? `Hide Snatched (0)`
+            : `Show Snatched (0)`;
 
         // Queue building the button and getting the results
         await Promise.all([
-            (toggle = Util.createButton(
-                'snatchedToggle',
-                toggleText,
-                'h1',
-                '#resetNewIcon',
-                'beforebegin',
-                'torFormButton'
+            (toggle = Util.createButtonElement(
+                'snatchedToggle',       // ID
+                toggleText,             // Text
+                '#resetNewIcon',        // Target element
+                {
+                    type: 'h1',         // HTML element type
+                    relative: 'beforebegin', // Position relative to target
+                    btnClass: 'torFormButton' // CSS class
+                }
             )),
             (resultList = this._share.getSearchList()),
         ]);
 
         toggle
             .then((btn) => {
-                // Update based on vis state
                 btn.addEventListener(
                     'click',
                     () => {
-                        if (this._isVisible === true) {
-                            btn.innerHTML = 'Show Snatched';
-                            this._setVisState(false);
-                        } else {
-                            btn.innerHTML = 'Hide Snatched';
-                            this._setVisState(true);
-                        }
+                        this._isVisible = !this._isVisible;
+                        btn.innerHTML = this._isVisible
+                            ? `Hide Snatched (${this._snatchedCount})`
+                            : `Show Snatched (${this._snatchedCount})`;
                         this._filterResults(results, this._snatchedHook);
                     },
                     false
@@ -105,6 +106,7 @@ class ToggleSnatched implements Feature {
      * @param subTar the elements that must be contained in our filtered results
      */
     private _filterResults(list: NodeListOf<HTMLTableRowElement>, subTar: string): void {
+        this._snatchedCount = 0; // Reset snatched count before filtering
         list.forEach((snatch) => {
             const btn: HTMLHeadingElement = <HTMLHeadingElement>(
                 document.querySelector('#mp_snatchedToggle')!
@@ -114,16 +116,25 @@ class ToggleSnatched implements Feature {
             const result = snatch.querySelector(subTar);
 
             if (result !== null) {
+                this._snatchedCount++; // Increment snatched count
                 // Hide/show as required
                 if (this._isVisible === false) {
-                    btn.innerHTML = 'Show Snatched';
+                    btn.innerHTML = `Show Snatched (${this._snatchedCount})`;
                     snatch.style.display = 'none';
                 } else {
-                    btn.innerHTML = 'Hide Snatched';
+                    btn.innerHTML = `Hide Snatched (${this._snatchedCount})`;
                     snatch.style.display = 'table-row';
                 }
             }
         });
+
+        // Update button text with the current snatched count
+        const toggleSwitch: HTMLElement = <HTMLElement>(
+            document.querySelector('#mp_snatchedToggle')
+        );
+        toggleSwitch.innerHTML = this._isVisible
+            ? `Hide Snatched (${this._snatchedCount})`
+            : `Show Snatched (${this._snatchedCount})`;
     }
 
     private _setVisState(val: boolean): void {
@@ -215,28 +226,32 @@ class PlaintextSearch implements Feature {
 
         // Queue building the toggle button and getting the results
         await Promise.all([
-            (toggleBtn = Util.createButton(
-                'plainToggle',
-                'Show Plaintext',
-                'div',
-                '#ssr',
-                'beforebegin',
-                'mp_toggle mp_plainBtn'
+            (toggleBtn = Util.createButtonElement(
+                'plainToggle',               // ID
+                'Show Plaintext',            // Text
+                '#ssr',                      // Target element
+                {
+                    type: 'div',             // HTML element type
+                    relative: 'beforebegin', // Position relative to target
+                    btnClass: 'mp_toggle mp_plainBtn' // CSS classes
+                }
             )),
-            (resultList = this._share.getSearchList()),
+        (resultList = this._share.getSearchList()),
         ]);
 
         // Process the results into plaintext
         resultList
             .then(async (res) => {
                 // Build the copy button
-                copyBtn = await Util.createButton(
-                    'plainCopy',
-                    'Copy Plaintext',
-                    'div',
-                    '#mp_plainToggle',
-                    'afterend',
-                    'mp_copy mp_plainBtn'
+                copyBtn = await Util.createButtonElement(
+                    'plainCopy',                  // ID
+                    'Copy Plaintext',             // Text
+                    '#mp_plainToggle',            // Target element
+                    {
+                        type: 'div',              // HTML element type
+                        relative: 'afterend',     // Position relative to target
+                        btnClass: 'mp_copy mp_plainBtn' // CSS classes
+                    }
                 );
                 // Build the plaintext box
                 copyBtn.insertAdjacentHTML(
@@ -588,13 +603,15 @@ class RandomBook implements Feature {
 
         // Queue building the button and getting the results
         await Promise.all([
-            (rando = Util.createButton(
-                'randomBook',
-                randoText,
-                'h1',
-                '#resetNewIcon',
-                'beforebegin',
-                'torFormButton'
+            (rando = Util.createButtonElement(
+                'randomBook',                // ID
+                randoText,                   // Text
+                '#resetNewIcon',             // Target element
+                {
+                    type: 'h1',              // HTML element type
+                    relative: 'beforebegin', // Position relative to the target
+                    btnClass: 'torFormButton' // CSS classes
+                }
             )),
         ]);
 
