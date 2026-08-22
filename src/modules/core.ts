@@ -99,13 +99,13 @@ class Alerts implements Feature {
                             console.log('Building update message');
                         }
                         // Start the message
-                        message = `<strong>MAM+ has been updated!</strong> You are now using v${MP.VERSION}, created on ${MP.TIMESTAMP}. Discuss it on <a href='forums.php?action=viewtopic&topicid=41863'>the forums</a>.<hr>`;
+                        message = `<strong>MAM+ has been updated!</strong> You are now using v${MP.VERSION}, created on ${MP.TIMESTAMP}. Discuss it on <a href='https://www.myanonamouse.net/forums.php?action=viewtopic&topicid=41863'>the forums</a>.<hr>`;
                         // Add the changelog
                         message += buildMsg(log.UPDATE_LIST, 'Changes');
                         message += buildMsg(log.BUG_LIST, 'Known Bugs');
                     } else if (kind === 'firstRun') {
                         message =
-                            '<h4>Welcome to MAM+!</h4>Please head over to your <a href="/preferences/index.php">preferences</a> to enable the MAM+ settings.<br>Any bug reports, feature requests, etc. can be made on <a href="https://github.com/gardenshade/mam-plus/issues">Github</a>, <a href="/forums.php?action=viewtopic&topicid=41863">the forums</a>, or <a href="/sendmessage.php?receiver=108303">through private message</a>.';
+                            '<h4>Welcome to MAM+!</h4>Please head over to your <a href="https://www.myanonamouse.net/preferences/index.php">preferences</a> to enable the MAM+ settings.<br>Any bug reports, feature requests, etc. can be made on <a href="https://github.com/jul1n/mam-plus-H/issues">Github</a>, <a href="https://www.myanonamouse.net/forums.php?action=viewtopic&topicid=41863">the forums</a>, or <a href="https://www.myanonamouse.net/sendmessage.php?receiver=108303">through private message</a>.';
                         if (MP.DEBUG) {
                             console.log('Building first run message');
                         }

@@ -763,7 +763,7 @@ class GoodreadsToMAM implements Feature {
         title: 'goodreadsToMAM',
         desc: 'Enable the Goodreads-to-MAM search buttons on Goodreads',
     };
-    private _tar: string = '.BookPageTitleSection__title';
+    private _tar: string = '.BookActions';
 
     constructor() {
         Util.startFeature(this._settings, this._tar, ['goodreads']).then((t) => {
@@ -806,35 +806,45 @@ class GoodreadsToMAM implements Feature {
         const queryTitleAndAuthor = `${cleanTitle} ${author}`.trim();
         const queryTitleOnly = cleanTitle.trim();
 
-        const searchUrlTitleAndAuthor = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleAndAuthor)}`;
-        const searchUrlTitleOnly = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleOnly)}`;
+        const searchUrlTitleAndAuthor =
+            'https://www.myanonamouse.net/tor/browse.php' +
+            '?tor[searchType]=all' +
+            '&tor[searchIn]=torrents' +
+            `&tor[text]=${encodeURIComponent(queryTitleAndAuthor)}`;
 
-        const titleSection = document.querySelector(this._tar);
-        if (titleSection) {
+        const searchUrlTitleOnly =
+            'https://www.myanonamouse.net/tor/browse.php' +
+            '?tor[searchType]=all' +
+            '&tor[searchIn]=torrents' +
+            `&tor[text]=${encodeURIComponent(queryTitleOnly)}`;
+
+        const bookActionsContainer = document.querySelector(this._tar);
+        if (bookActionsContainer) {
             const container = document.createElement('div');
             container.id = 'mam-search-buttons-container';
-            container.style.marginTop = '12px';
+            container.style.marginTop = '8px';
             container.style.display = 'flex';
+            container.style.flexDirection = 'column';
             container.style.gap = '8px';
-            container.style.flexWrap = 'wrap';
+            container.style.width = '100%';
 
             const btnBoth = document.createElement('a');
             btnBoth.href = searchUrlTitleAndAuthor;
             btnBoth.target = '_blank';
-            btnBoth.className = 'Button Button--secondary Button--small';
+            btnBoth.className = 'Button Button--secondary Button--medium Button--block';
             btnBoth.style.textDecoration = 'none';
             btnBoth.innerHTML = '<span class="Button__labelItem">🔎 MAM (Title + Author)</span>';
 
             const btnTitle = document.createElement('a');
             btnTitle.href = searchUrlTitleOnly;
             btnTitle.target = '_blank';
-            btnTitle.className = 'Button Button--secondary Button--small';
+            btnTitle.className = 'Button Button--secondary Button--medium Button--block';
             btnTitle.style.textDecoration = 'none';
             btnTitle.innerHTML = '<span class="Button__labelItem">🔎 MAM (Title Only)</span>';
 
             container.appendChild(btnBoth);
             container.appendChild(btnTitle);
-            titleSection.appendChild(container);
+            bookActionsContainer.appendChild(container);
         }
     }
 
@@ -883,8 +893,17 @@ class AmazonToMAM implements Feature {
         const queryTitleAndAuthor = `${cleanTitle} ${author}`.trim();
         const queryTitleOnly = cleanTitle.trim();
 
-        const searchUrlTitleAndAuthor = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleAndAuthor)}`;
-        const searchUrlTitleOnly = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleOnly)}`;
+        const searchUrlTitleAndAuthor =
+            'https://www.myanonamouse.net/tor/browse.php' +
+            '?tor[searchType]=all' +
+            '&tor[searchIn]=torrents' +
+            `&tor[text]=${encodeURIComponent(queryTitleAndAuthor)}`;
+
+        const searchUrlTitleOnly =
+            'https://www.myanonamouse.net/tor/browse.php' +
+            '?tor[searchType]=all' +
+            '&tor[searchIn]=torrents' +
+            `&tor[text]=${encodeURIComponent(queryTitleOnly)}`;
 
         const target = document.querySelector('#bylineInfo_feature_div') || document.querySelector('#title');
         if (target) {
