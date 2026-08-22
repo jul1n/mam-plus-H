@@ -8,7 +8,7 @@ Don't know what MAM is? This script won't be very useful to you then.
 
 ## Installation
 
-[![Install Button](https://img.shields.io/badge/Install-Click%20Here-green?style=for-the-badge&logo=DocuSign)](https://github.com/jul1n/mam-plus-H/raw/master/release/mam-plus.user.js)
+[![Install Button](https://img.shields.io/badge/Install-Click%20Here-green?style=for-the-badge&logo=DocuSign)](https://github.com/jul1n/mam-plus-H/raw/master/release/mam-plus-H.user.js)
 
 You need to have a userscript browser extension (like [Violentmonkey](https://violentmonkey.github.io/get-it/) or similar) installed in order to use MAM+. Greasemonkey is NOT recommended as it no longer follows the Userscript API standards it once set (and that MAM+ currently uses).
 
