@@ -172,7 +172,7 @@ class GiftNewest implements Feature {
             const giftAll = <HTMLButtonElement>document.getElementById('mp_giftAll');
 
             if (
-                Number(valueToNumber) > 1000 ||
+                Number(valueToNumber) > 100 ||
                 Number(valueToNumber) < 5 ||
                 isNaN(Number(valueToNumber))
             ) {

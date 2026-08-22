@@ -461,7 +461,9 @@ class RatioProtect implements Feature {
             tar.style.backgroundColor = 'Red';
             tar.style.cursor = 'no-drop';
             tar.innerHTML = 'FL Needed';
-            label.style.fontWeight = 'bold';
+            if (label) {
+                label.style.fontWeight = 'bold';
+            }
         } else {
             throw new Error(`State "${state}" does not exist.`);
         }
@@ -753,3 +755,177 @@ class RatioProtectIcons implements Feature {
 }
 
 // TODO: Add feature to set RatioProtectIcon's `_userID` value. Only necessary once other icon sets exist.
+
+class GoodreadsToMAM implements Feature {
+    private _settings: CheckboxSetting = {
+        scope: SettingGroup['Torrent Page'],
+        type: 'checkbox',
+        title: 'goodreadsToMAM',
+        desc: 'Enable the Goodreads-to-MAM search buttons on Goodreads',
+    };
+    private _tar: string = '.BookPageTitleSection__title';
+
+    constructor() {
+        Util.startFeature(this._settings, this._tar, ['goodreads']).then((t) => {
+            if (t) {
+                this._init();
+            }
+        });
+    }
+
+    private async _init() {
+        if (document.getElementById('mam-search-buttons-container')) return;
+
+        let title = '';
+        let author = '';
+        const jsonLdEl = document.querySelector('script[type="application/ld+json"]');
+        if (jsonLdEl) {
+            try {
+                const data = JSON.parse(jsonLdEl.textContent || '{}');
+                title = data.name || '';
+                if (data.author && data.author[0]) {
+                    author = data.author[0].name || '';
+                }
+            } catch (e) {
+                console.error("Error parsing JSON-LD metadata", e);
+            }
+        }
+
+        if (!title) {
+            const titleEl = document.querySelector('[data-testid="bookTitle"]');
+            if (titleEl) title = (titleEl as HTMLElement).innerText.trim();
+        }
+        if (!author) {
+            const authorEl = document.querySelector('.ContributorLink__name');
+            if (authorEl) author = (authorEl as HTMLElement).innerText.trim();
+        }
+
+        if (!title) return;
+
+        const cleanTitle = title.replace(/\s\([^)]+\)/g, '').trim();
+        const queryTitleAndAuthor = `${cleanTitle} ${author}`.trim();
+        const queryTitleOnly = cleanTitle.trim();
+
+        const searchUrlTitleAndAuthor = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleAndAuthor)}`;
+        const searchUrlTitleOnly = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleOnly)}`;
+
+        const titleSection = document.querySelector(this._tar);
+        if (titleSection) {
+            const container = document.createElement('div');
+            container.id = 'mam-search-buttons-container';
+            container.style.marginTop = '12px';
+            container.style.display = 'flex';
+            container.style.gap = '8px';
+            container.style.flexWrap = 'wrap';
+
+            const btnBoth = document.createElement('a');
+            btnBoth.href = searchUrlTitleAndAuthor;
+            btnBoth.target = '_blank';
+            btnBoth.className = 'Button Button--secondary Button--small';
+            btnBoth.style.textDecoration = 'none';
+            btnBoth.innerHTML = '<span class="Button__labelItem">🔎 MAM (Title + Author)</span>';
+
+            const btnTitle = document.createElement('a');
+            btnTitle.href = searchUrlTitleOnly;
+            btnTitle.target = '_blank';
+            btnTitle.className = 'Button Button--secondary Button--small';
+            btnTitle.style.textDecoration = 'none';
+            btnTitle.innerHTML = '<span class="Button__labelItem">🔎 MAM (Title Only)</span>';
+
+            container.appendChild(btnBoth);
+            container.appendChild(btnTitle);
+            titleSection.appendChild(container);
+        }
+    }
+
+    get settings(): CheckboxSetting {
+        return this._settings;
+    }
+}
+
+class AmazonToMAM implements Feature {
+    private _settings: CheckboxSetting = {
+        scope: SettingGroup['Torrent Page'],
+        type: 'checkbox',
+        title: 'amazonToMAM',
+        desc: 'Enable the Amazon-to-MAM search buttons on Amazon',
+    };
+    private _tar: string = '#bylineInfo_feature_div, #title';
+
+    constructor() {
+        Util.startFeature(this._settings, this._tar, ['amazon']).then((t) => {
+            if (t) {
+                this._init();
+            }
+        });
+    }
+
+    private async _init() {
+        if (document.getElementById('mam-amazon-search-buttons-container')) return;
+
+        const titleEl = document.querySelector('#productTitle');
+        if (!titleEl) return;
+        const title = titleEl.textContent || '';
+
+        const authorEl = document.querySelector('#bylineInfo');
+        let author = '';
+        if (authorEl) {
+            const links = authorEl.querySelectorAll('a');
+            if (links.length > 0) {
+                author = Array.from(links).map(a => a.textContent || '').join(' ');
+            } else {
+                author = authorEl.textContent || '';
+            }
+        }
+        author = author.replace(/^(by\s+)/i, '').replace(/\s+\(Author\)/i, '').replace(/\(Author\)/ig, '').replace(/\s+/g, ' ').trim();
+
+        const cleanTitle = title.replace(/\s\([^)]+\)/g, '').replace(/[\n\r]/g, '').replace(/\s+/g, ' ').trim();
+        const queryTitleAndAuthor = `${cleanTitle} ${author}`.trim();
+        const queryTitleOnly = cleanTitle.trim();
+
+        const searchUrlTitleAndAuthor = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleAndAuthor)}`;
+        const searchUrlTitleOnly = `https://www.myanonamouse.net/tor/browse.php?tor[searchType]=all&tor[searchIn]=torrents&tor[text]=${encodeURIComponent(queryTitleOnly)}`;
+
+        const target = document.querySelector('#bylineInfo_feature_div') || document.querySelector('#title');
+        if (target) {
+            const container = document.createElement('div');
+            container.id = 'mam-amazon-search-buttons-container';
+            container.style.marginTop = '12px';
+            container.style.display = 'flex';
+            container.style.gap = '8px';
+            container.style.flexWrap = 'wrap';
+
+            const btnBoth = document.createElement('a');
+            btnBoth.href = searchUrlTitleAndAuthor;
+            btnBoth.target = '_blank';
+            btnBoth.style.textDecoration = 'none';
+            btnBoth.style.padding = '4px 8px';
+            btnBoth.style.backgroundColor = '#f0c14b';
+            btnBoth.style.border = '1px solid #a88734';
+            btnBoth.style.color = '#111';
+            btnBoth.style.borderRadius = '3px';
+            btnBoth.style.fontSize = '12px';
+            btnBoth.innerText = '🔎 MAM (Title + Author)';
+
+            const btnTitle = document.createElement('a');
+            btnTitle.href = searchUrlTitleOnly;
+            btnTitle.target = '_blank';
+            btnTitle.style.textDecoration = 'none';
+            btnTitle.style.padding = '4px 8px';
+            btnTitle.style.backgroundColor = '#f0c14b';
+            btnTitle.style.border = '1px solid #a88734';
+            btnTitle.style.color = '#111';
+            btnTitle.style.borderRadius = '3px';
+            btnTitle.style.fontSize = '12px';
+            btnTitle.innerText = '🔎 MAM (Title Only)';
+
+            container.appendChild(btnBoth);
+            container.appendChild(btnTitle);
+            target.appendChild(container);
+        }
+    }
+
+    get settings(): CheckboxSetting {
+        return this._settings;
+    }
+}

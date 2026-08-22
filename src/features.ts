@@ -43,6 +43,8 @@ class InitFeatures {
 
         // Initialize Torrent Page functions
         new GoodreadsButton();
+        new GoodreadsToMAM();
+        new AmazonToMAM();
         new StoryGraphButton();
         new AudibleButton();
         new CurrentlyReading();

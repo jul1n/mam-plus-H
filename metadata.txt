@@ -6,6 +6,22 @@
 // @author       <%= pkg.author %>
 // @run-at       document-start
 // @include      https://*.myanonamouse.net/*
+// @include      https://*.goodreads.com/book/show/*
+// @include      https://*.goodreads.com/en/book/show/*
+// @include      https://*.goodreads.com/es/book/show/*
+// @include      https://*.goodreads.com/fr/book/show/*
+// @include      https://*.goodreads.com/it/book/show/*
+// @include      https://*.goodreads.com/de/book/show/*
+// @include      https://*.amazon.com/dp/*
+// @include      https://*.amazon.com/*/dp/*
+// @include      https://*.amazon.co.uk/dp/*
+// @include      https://*.amazon.co.uk/*/dp/*
+// @include      https://*.amazon.fr/dp/*
+// @include      https://*.amazon.fr/*/dp/*
+// @include      https://*.amazon.ca/dp/*
+// @include      https://*.amazon.ca/*/dp/*
+// @include      https://*.amazon.de/dp/*
+// @include      https://*.amazon.de/*/dp/*
 // @exclude      https://cdn.myanonamouse.net/*
 // @icon         https://i.imgur.com/dX44pSv.png
 // @resource     MP_CSS https://raw.githubusercontent.com/gardenshade/mam-plus/master/release/main.css?v=<%= pkg.version %>

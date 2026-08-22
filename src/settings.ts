@@ -158,7 +158,7 @@ class Settings {
 
     private static _copySettings(): string {
         const gmList = GM_listValues();
-        const outp: [string, string][] = [];
+        const outp: [string, any][] = [];
 
         // Loop over all stored settings and push to output array
         gmList.map((setting) => {
@@ -174,11 +174,9 @@ class Settings {
     private static _pasteSettings(payload: string) {
         if (MP.DEBUG) console.group(`_pasteSettings( )`);
         const settings = JSON.parse(payload);
-        settings.forEach((tuple: [string, string][]) => {
-            if (tuple[1]) {
-                GM_setValue(`${tuple[0]}`, `${tuple[1]}`);
-                if (MP.DEBUG) console.log(tuple[0], ': ', tuple[1]);
-            }
+        settings.forEach((tuple: [string, any]) => {
+            GM_setValue(tuple[0], tuple[1]);
+            if (MP.DEBUG) console.log(tuple[0], ': ', tuple[1]);
         });
     }
 

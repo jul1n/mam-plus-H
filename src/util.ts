@@ -183,16 +183,19 @@ class Util {
      * @param node The node to convert
      */
     public static nodeToElem(node: Node): HTMLElement {
-        if (node.firstChild !== null) {
-            return <HTMLElement>node.firstChild!.parentElement!;
-        } else {
-            console.warn('Node-to-elem without childnode is untested');
-            const tempNode: Node = node;
-            node.appendChild(tempNode);
-            const selected: HTMLElement = <HTMLElement>node.firstChild!.parentElement!;
-            node.removeChild(tempNode);
-            return selected;
+        if (!node) {
+            throw new Error('nodeToElem(): node is null');
         }
+
+        if (node instanceof HTMLElement) {
+            return node;
+        }
+
+        if (node.parentElement) {
+            return <HTMLElement>node.parentElement;
+        }
+
+        throw new Error('nodeToElem(): unable to resolve Element');
     }
 
     /**
@@ -274,16 +277,19 @@ class Util {
      */
     public static getJSON(url: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            const getHTTP = new XMLHttpRequest();
-            //URL to GET results with the amount entered by user plus the username found on the menu selected
-            getHTTP.open('GET', url, true);
-            getHTTP.setRequestHeader('Content-Type', 'application/json');
-            getHTTP.onreadystatechange = function () {
-                if (getHTTP.readyState === 4 && getHTTP.status === 200) {
-                    resolve(getHTTP.responseText);
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(xhr.responseText);
+                } else {
+                    reject(new Error(`HTTP ${xhr.status}: ${url}`));
                 }
             };
-            getHTTP.send();
+            xhr.onerror = () => reject(new Error(`Network error: ${url}`));
+            xhr.send();
         });
     }
 
@@ -454,11 +460,16 @@ class Util {
                 // Current key is an initial
                 if (key.length < 2) {
                     // If next key is an initial, don't add a space
-                    const nextLeng: number = arr[val + 1].length;
-                    if (nextLeng < 2) {
-                        outp += key;
+                    const next = arr[val + 1];
+                    if (next) {
+                        const nextLeng: number = next.length;
+                        if (nextLeng < 2) {
+                            outp += key;
+                        } else {
+                            outp += `${key} `;
+                        }
                     } else {
-                        outp += `${key} `;
+                        outp += key;
                     }
                 } else {
                     outp += `${key} `;

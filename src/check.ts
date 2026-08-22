@@ -151,42 +151,48 @@ class Check {
                 }
                 // Check.page() has not previous run
             } else {
-                // Get the current page
-                let path: string = window.location.pathname;
-                path = path.indexOf('.php') ? path.split('.php')[0] : path;
-                const page = path.split('/');
-                page.shift();
-
-                if (MP.DEBUG) {
-                    console.log(`Page URL @ ${page.join(' -> ')}`);
-                }
-
-                // Create an object literal of sorts to use as a "switch"
-                const cases: { [key: string]: () => ValidPage | undefined } = {
-                    '': () => 'home',
-                    index: () => 'home',
-                    shoutbox: () => 'shoutbox',
-                    preferences: () => 'settings',
-                    millionaires: () => 'vault',
-                    t: () => 'torrent',
-                    u: () => 'user',
-                    f: () => {
-                        if (page[1] === 't') return 'forum thread';
-                    },
-                    tor: () => {
-                        if (page[1] === 'browse') return 'browse';
-                        else if (page[1] === 'requests2') return 'request';
-                        else if (page[1] === 'viewRequest') return 'request details';
-                        else if (page[1] === 'upload') return 'upload';
-                    },
-                    newUsers: () => 'new users',
-                };
-
-                // Check to see if we have a case that matches the current page
-                if (cases[page[0]]) {
-                    currentPage = cases[page[0]]();
+                if (window.location.hostname.includes('goodreads.com')) {
+                    currentPage = 'goodreads';
+                } else if (window.location.hostname.includes('amazon.')) {
+                    currentPage = 'amazon';
                 } else {
-                    console.warn(`Page "${page}" is not a valid M+ page. Path: ${path}`);
+                    // Get the current page
+                    let path: string = window.location.pathname;
+                    path = path.indexOf('.php') ? path.split('.php')[0] : path;
+                    const page = path.split('/');
+                    page.shift();
+
+                    if (MP.DEBUG) {
+                        console.log(`Page URL @ ${page.join(' -> ')}`);
+                    }
+
+                    // Create an object literal of sorts to use as a "switch"
+                    const cases: { [key: string]: () => ValidPage | undefined } = {
+                        '': () => 'home',
+                        index: () => 'home',
+                        shoutbox: () => 'shoutbox',
+                        preferences: () => 'settings',
+                        millionaires: () => 'vault',
+                        t: () => 'torrent',
+                        u: () => 'user',
+                        f: () => {
+                            if (page[1] === 't') return 'forum thread';
+                        },
+                        tor: () => {
+                            if (page[1] === 'browse') return 'browse';
+                            else if (page[1] === 'requests2') return 'request';
+                            else if (page[1] === 'viewRequest') return 'request details';
+                            else if (page[1] === 'upload') return 'upload';
+                        },
+                        newUsers: () => 'new users',
+                    };
+
+                    // Check to see if we have a case that matches the current page
+                    if (cases[page[0]]) {
+                        currentPage = cases[page[0]]();
+                    } else {
+                        console.warn(`Page "${page}" is not a valid M+ page. Path: ${path}`);
+                    }
                 }
 
                 if (currentPage !== undefined) {
