@@ -117,7 +117,7 @@ function runExternalMamSearch() {
         return { title, author, target, site: 'amazon' };
     }
 
-    function createSearchButton(label, query, secondary = false) {
+    function createSearchButton(label, query, site, secondary = false) {
         const link = document.createElement('a');
         link.href = buildMamSearchUrl(query);
         link.target = '_blank';
@@ -125,28 +125,40 @@ function runExternalMamSearch() {
         link.textContent = label;
         link.title = `Search MyAnonamouse for: ${normalizeText(query)}`;
 
-        Object.assign(link.style, {
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '34px',
-            padding: '0 12px',
-            border: '1px solid #285c45',
-            borderRadius: '6px',
-            background: secondary ? '#ffffff' : '#356f55',
-            color: secondary ? '#285c45' : '#ffffff',
-            fontSize: '13px',
-            fontWeight: '600',
-            lineHeight: '1.2',
-            textDecoration: 'none',
-            cursor: 'pointer',
-            boxSizing: 'border-box'
-        });
-
-        return link;
+        if (site === 'goodreads') {
+            link.className = 'Button Button--secondary Button--medium Button--block';
+            Object.assign(link.style, {
+                textDecoration: 'none',
+                boxSizing: 'border-box'
+            });
+            const wrapper = document.createElement('div');
+            wrapper.className = 'BookActions__button';
+            wrapper.appendChild(link);
+            return wrapper;
+        } else {
+            Object.assign(link.style, {
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '34px',
+                padding: '0 12px',
+                border: '1px solid #285c45',
+                borderRadius: '6px',
+                background: secondary ? '#ffffff' : '#356f55',
+                color: secondary ? '#285c45' : '#ffffff',
+                fontSize: '13px',
+                fontWeight: '600',
+                lineHeight: '1.2',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                boxSizing: 'border-box'
+            });
+            return link;
+        }
     }
 
     function addButtons(book) {
+        console.debug('[MAM+] addButtons check: title =', book.title, 'target =', book.target);
         if (!book.title || !book.target || document.getElementById(CONTAINER_ID)) {
             return false;
         }
@@ -155,26 +167,36 @@ function runExternalMamSearch() {
         container.id = CONTAINER_ID;
         container.dataset.site = book.site;
 
-        Object.assign(container.style, {
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '8px',
-            width: '100%',
-            margin: book.site === 'amazon' ? '10px 0 4px' : '10px 0'
-        });
+        if (book.site === 'goodreads') {
+            Object.assign(container.style, {
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                width: '100%',
+                marginTop: '8px'
+            });
+        } else {
+            Object.assign(container.style, {
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+                width: '100%',
+                margin: '10px 0 4px'
+            });
+        }
 
         if (book.author) {
             container.appendChild(
-                createSearchButton('🔎 MAM · titre + auteur', `${book.title} ${book.author}`)
+                createSearchButton('🔎 Search MAM (Title + Author)', `${book.title} ${book.author}`, book.site)
             );
         }
 
         container.appendChild(
-            createSearchButton('MAM · titre seul', book.title, Boolean(book.author))
+            createSearchButton('🔎 Search MAM (Title Only)', book.title, book.site, Boolean(book.author))
         );
 
         book.target.appendChild(container);
-        console.log(`[MAM+] Added ${book.site} → MAM search buttons.`, book.title, book.author);
+        console.info(`[MAM+] Added ${book.site} → MAM search buttons.`, book.title, book.author);
         return true;
     }
 
