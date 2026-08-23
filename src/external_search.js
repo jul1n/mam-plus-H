@@ -10,6 +10,18 @@ function runExternalMamSearch() {
             .trim();
     }
 
+    function cleanShelfAuthor(name) {
+        if (!name) return '';
+        let cleaned = name.replace(/[*†‡§#]/g, '').trim();
+        if (cleaned.includes(',')) {
+            const parts = cleaned.split(',').map(p => p.trim());
+            if (parts.length === 2) {
+                cleaned = `${parts[1]} ${parts[0]}`;
+            }
+        }
+        return cleaned;
+    }
+
     function buildMamSearchUrl(query) {
         const url = new URL(MAM_SEARCH_URL);
         url.searchParams.set('tor[searchType]', 'all');
@@ -252,11 +264,8 @@ function runExternalMamSearch() {
             const originalLabel = labelItem.textContent.split(' (')[0];
             if (count > 0) {
                 labelItem.textContent = `${originalLabel} (${count} trouvés)`;
-                button.style.borderColor = '#10b981';
-                button.style.color = '#10b981';
             } else {
                 labelItem.textContent = `${originalLabel} (aucun résultat)`;
-                button.style.opacity = '0.6';
             }
         });
     }
@@ -306,7 +315,7 @@ function runExternalMamSearch() {
 
             const title = titleEl.textContent.replace(/\(.*?\)/g, '').trim();
             const authorEl = row.querySelector('a[href*="/author/show/"]');
-            const author = authorEl ? authorEl.textContent.trim() : '';
+            const author = authorEl ? cleanShelfAuthor(authorEl.textContent) : '';
 
             const checkSpan = document.createElement('span');
             checkSpan.className = 'mam-shelf-check';
@@ -415,7 +424,7 @@ function runExternalMamSearch() {
             if (titleEl) {
                 const title = titleEl.textContent.replace(/\(.*?\)/g, '').trim();
                 const authorEl = row.querySelector('a[href*="/author/show/"]');
-                const author = authorEl ? authorEl.textContent.trim() : '';
+                const author = authorEl ? cleanShelfAuthor(authorEl.textContent) : '';
                 span.textContent = ' [Vérification...]';
                 checkSingleBookOnShelf(span, `${title} ${author}`);
             }
