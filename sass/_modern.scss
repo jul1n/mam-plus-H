@@ -1,5 +1,5 @@
 /* =========================================================
-   MAM MODERN LIGHT
+   MAM MODERN LIGHT (Version Dense)
    Surcouche visuelle uniquement
    ========================================================= */
 
@@ -28,12 +28,12 @@ html.mam-modern {
     --mam-success: #507b67;
     --mam-success-soft: #e8f1ed;
 
-    --mam-radius: 12px;
-    --mam-radius-lg: 16px;
+    --mam-radius: 8px;
+    --mam-radius-lg: 10px;
 
     --mam-shadow:
-        0 1px 2px rgba(20, 30, 35, .04),
-        0 5px 18px rgba(20, 30, 35, .045);
+        0 1px 2px rgba(20, 30, 35, .03),
+        0 4px 12px rgba(20, 30, 35, .03);
 
     --mam-content-width: 1440px;
 }
@@ -57,8 +57,8 @@ html.mam-modern #siteMain {
         Arial,
         sans-serif !important;
 
-    font-size: 14px;
-    line-height: 1.45;
+    font-size: 13px !important;
+    line-height: 1.35 !important;
 }
 
 html.mam-modern body {
@@ -86,8 +86,8 @@ html.mam-modern a:hover {
 
 html.mam-modern header[role="banner"] {
     max-width: var(--mam-content-width);
-    margin: 16px auto 10px;
-    padding: 0 18px;
+    margin: 8px auto 6px;
+    padding: 0 12px;
     box-sizing: border-box;
 }
 
@@ -100,7 +100,7 @@ html.mam-modern #msb {
 html.mam-modern #msb img {
     display: block;
     width: 100%;
-    max-height: 125px;
+    max-height: 90px;
     object-fit: cover;
 }
 
@@ -111,14 +111,14 @@ html.mam-modern #msb img {
 
 html.mam-modern #preNav {
     max-width: var(--mam-content-width);
-    margin: 0 auto 10px !important;
+    margin: 0 auto 6px !important;
 
-    padding: 10px 18px !important;
+    padding: 6px 12px !important;
 
     display: flex !important;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 8px;
 
     box-sizing: border-box;
 
@@ -129,7 +129,7 @@ html.mam-modern #preNav {
 html.mam-modern #mainSearch {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
 
     flex: 0 1 650px;
 }
@@ -138,40 +138,41 @@ html.mam-modern #ts {
     flex: 1;
 
     min-width: 220px;
-    height: 40px;
+    height: 32px;
 
     box-sizing: border-box;
 
-    padding: 0 14px !important;
+    padding: 0 10px !important;
 
     background: var(--mam-surface) !important;
     color: var(--mam-text) !important;
 
     border: 1px solid var(--mam-border) !important;
-    border-radius: 10px !important;
+    border-radius: 6px !important;
 
     outline: none !important;
 
     box-shadow: none !important;
 
-    font-size: 14px;
+    font-size: 13px;
 }
 
 html.mam-modern #ts:focus {
     border-color: var(--mam-primary) !important;
-    box-shadow: 0 0 0 3px rgba(82, 118, 108, .12) !important;
+    box-shadow: 0 0 0 2px rgba(82, 118, 108, .1) !important;
 }
 
 html.mam-modern #tss {
-    height: 40px;
+    height: 32px;
 
-    padding: 0 30px 0 11px !important;
+    padding: 0 20px 0 8px !important;
 
     background-color: var(--mam-surface) !important;
     color: var(--mam-text-soft) !important;
 
     border: 1px solid var(--mam-border) !important;
-    border-radius: 10px !important;
+    border-radius: 6px !important;
+    font-size: 12px;
 }
 
 
@@ -182,18 +183,19 @@ html.mam-modern #tss {
 html.mam-modern input[type="submit"],
 html.mam-modern input[type="button"],
 html.mam-modern button {
-    min-height: 38px;
+    min-height: 32px;
 
-    padding: 0 15px !important;
+    padding: 0 12px !important;
 
     background: var(--mam-primary) !important;
     color: #fff !important;
 
     border: 0 !important;
-    border-radius: 9px !important;
+    border-radius: 6px !important;
 
     font-family: inherit !important;
     font-weight: 600 !important;
+    font-size: 12px !important;
 
     cursor: pointer;
 
@@ -220,13 +222,13 @@ html.mam-modern #userStat {
 
     box-sizing: border-box;
 
-    margin: 0 auto 8px !important;
-    padding: 7px 18px !important;
+    margin: 0 auto 6px !important;
+    padding: 4px 12px !important;
 
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 7px;
+    gap: 4px;
     flex-wrap: wrap;
 
     background: transparent !important;
@@ -237,11 +239,11 @@ html.mam-modern #userStat > a,
 html.mam-modern #userStat > span {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 
-    min-height: 27px;
+    min-height: 22px;
 
-    padding: 2px 10px !important;
+    padding: 1px 8px !important;
 
     background: var(--mam-surface) !important;
     color: var(--mam-text-soft) !important;
@@ -249,7 +251,7 @@ html.mam-modern #userStat > span {
     border: 1px solid var(--mam-border-soft) !important;
     border-radius: 999px !important;
 
-    font-size: 12px !important;
+    font-size: 11px !important;
 }
 
 
@@ -262,13 +264,13 @@ html.mam-modern #mainmenu {
     top: 0;
     z-index: 1000;
 
-    background: rgba(255,255,255,.94) !important;
-    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,.96) !important;
+    backdrop-filter: blur(8px);
 
     border-top: 1px solid var(--mam-border-soft) !important;
     border-bottom: 1px solid var(--mam-border) !important;
 
-    box-shadow: 0 3px 12px rgba(30,40,45,.04) !important;
+    box-shadow: 0 2px 8px rgba(30,40,45,.03) !important;
 }
 
 html.mam-modern #menu {
@@ -277,11 +279,11 @@ html.mam-modern #menu {
     box-sizing: border-box;
 
     margin: 0 auto !important;
-    padding: 5px 18px !important;
+    padding: 3px 12px !important;
 
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
 
     background: transparent !important;
 }
@@ -295,19 +297,19 @@ html.mam-modern #menu > li > a {
     display: flex;
     align-items: center;
 
-    min-height: 36px;
+    min-height: 30px;
 
     box-sizing: border-box;
 
-    padding: 0 11px !important;
+    padding: 0 8px !important;
 
     color: var(--mam-text) !important;
     background: transparent !important;
 
     border: 0 !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
 
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 500;
 
     transition: background .15s ease;
@@ -324,15 +326,15 @@ html.mam-modern #menu > li > a:hover {
    ========================================================= */
 
 html.mam-modern #menu li ul {
-    padding: 6px !important;
+    padding: 4px !important;
 
     background: var(--mam-surface) !important;
 
     border: 1px solid var(--mam-border) !important;
-    border-radius: 10px !important;
+    border-radius: 6px !important;
 
     box-shadow:
-        0 10px 30px rgba(20,30,35,.12) !important;
+        0 6px 20px rgba(20,30,35,.08) !important;
 }
 
 html.mam-modern #menu li ul li,
@@ -344,13 +346,14 @@ html.mam-modern #menu li ul li a {
 html.mam-modern #menu li ul li a {
     display: block;
 
-    padding: 7px 10px !important;
+    padding: 5px 8px !important;
 
     color: var(--mam-text) !important;
 
-    border-radius: 6px !important;
+    border-radius: 4px !important;
 
     white-space: nowrap;
+    font-size: 12px;
 }
 
 html.mam-modern #menu li ul li a:hover {
@@ -377,15 +380,16 @@ html.mam-modern #hrnews {
 
     box-sizing: border-box;
 
-    margin: 10px auto !important;
-    padding: 8px 16px !important;
+    margin: 6px auto !important;
+    padding: 6px 12px !important;
 
     background: var(--mam-accent-soft) !important;
 
     border: 1px solid #e7dcc3 !important;
-    border-radius: 10px !important;
+    border-radius: 6px !important;
 
     color: #6f5b32 !important;
+    font-size: 12px;
 }
 
 
@@ -398,8 +402,8 @@ html.mam-modern main {
 
     box-sizing: border-box;
 
-    margin: 16px auto 30px !important;
-    padding: 0 18px !important;
+    margin: 10px auto 20px !important;
+    padding: 0 12px !important;
 }
 
 html.mam-modern #mainTable {
@@ -436,6 +440,7 @@ html.mam-modern .blockCon {
     box-shadow: var(--mam-shadow) !important;
 
     overflow: hidden;
+    margin-bottom: 12px !important;
 }
 
 
@@ -480,7 +485,7 @@ html.mam-modern .blockHead {
 }
 
 html.mam-modern .blockHeadCon {
-    padding: 13px 16px !important;
+    padding: 8px 12px !important;
 
     background: transparent !important;
 }
@@ -490,7 +495,7 @@ html.mam-modern .blockHead h4 {
 
     color: var(--mam-text) !important;
 
-    font-size: 14px !important;
+    font-size: 13px !important;
     font-weight: 650 !important;
 
     text-shadow: none !important;
@@ -508,7 +513,7 @@ html.mam-modern .blockBodyCon {
 }
 
 html.mam-modern .blockBodyCon {
-    padding: 14px 16px !important;
+    padding: 8px 12px !important;
 }
 
 
@@ -517,27 +522,27 @@ html.mam-modern .blockBodyCon {
    ========================================================= */
 
 html.mam-modern #mainBody {
-    padding: 6px !important;
+    padding: 4px !important;
 }
 
 html.mam-modern #mainBody > .flexbox {
     display: flex !important;
 
-    gap: 16px !important;
+    gap: 12px !important;
 
     flex-wrap: wrap !important;
     align-items: flex-start !important;
 
-    margin-top: 16px;
+    margin-top: 10px;
 }
 
 
 /* Titres Recent News */
 
 html.mam-modern .mainPageNewsHead {
-    margin: 8px 0 12px !important;
+    margin: 6px 0 8px !important;
 
-    font-size: 22px !important;
+    font-size: 18px !important;
     font-weight: 650 !important;
 
     color: var(--mam-text) !important;
@@ -545,12 +550,12 @@ html.mam-modern .mainPageNewsHead {
 
 html.mam-modern .mainPageNews,
 html.mam-modern .mainPageNewsSub {
-    margin: 4px 0 !important;
-    padding: 7px 10px !important;
+    margin: 3px 0 !important;
+    padding: 5px 8px !important;
 
     background: var(--mam-surface-soft) !important;
 
-    border-radius: 7px !important;
+    border-radius: 4px !important;
 
     color: var(--mam-text-soft) !important;
 }
@@ -573,7 +578,7 @@ html.mam-modern .blockBody table {
 
 html.mam-modern .blockBody table td,
 html.mam-modern .blockBody table th {
-    padding: 7px 9px !important;
+    padding: 4px 6px !important;
 
     border-color: var(--mam-border-soft) !important;
 }
@@ -594,15 +599,17 @@ html.mam-modern #fpShout {
 }
 
 html.mam-modern #sbMenuTabs {
-    padding: 5px !important;
+    padding: 3px !important;
 
     background: var(--mam-surface-soft) !important;
 
-    border-radius: 8px !important;
+    border-radius: 6px !important;
 }
 
 html.mam-modern #sbMenuTabs li a {
-    border-radius: 6px !important;
+    border-radius: 4px !important;
+    padding: 3px 8px !important;
+    font-size: 12px;
 }
 
 html.mam-modern #shbox_text,
@@ -612,9 +619,10 @@ html.mam-modern input[type="text"] {
     color: var(--mam-text) !important;
 
     border: 1px solid var(--mam-border) !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
 
     box-shadow: none !important;
+    padding: 4px 8px !important;
 }
 
 
@@ -623,13 +631,13 @@ html.mam-modern input[type="text"] {
    ========================================================= */
 
 html.mam-modern .servStatBlock {
-    margin: 6px 0 !important;
-    padding: 10px 12px !important;
+    margin: 4px 0 !important;
+    padding: 6px 8px !important;
 
     background: var(--mam-surface-soft) !important;
 
     border: 0 !important;
-    border-radius: 8px !important;
+    border-radius: 6px !important;
 }
 
 html.mam-modern .servLoadBar {
@@ -647,12 +655,12 @@ html.mam-modern .servLoadBar {
    ========================================================= */
 
 html.mam-modern .footRow {
-    padding: 24px !important;
+    padding: 16px !important;
 
     color: var(--mam-text-faint) !important;
     background: transparent !important;
 
-    font-size: 12px;
+    font-size: 11px;
 }
 
 
@@ -685,6 +693,6 @@ html.mam-modern .footRow {
     }
 
     html.mam-modern .blockCon {
-        margin-bottom: 14px !important;
+        margin-bottom: 10px !important;
     }
 }
