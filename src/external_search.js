@@ -216,7 +216,7 @@ function runExternalMamSearch() {
     }
 
     function fetchTorrentCount(query, callback) {
-        const searchUrl = `https://www.myanonamouse.net/tor/search.php?com[text]=${encodeURIComponent(query)}&com[searchIn][]=title&com[searchIn][]=author`;
+        const searchUrl = buildMamSearchUrl(query);
         if (typeof GM_xmlhttpRequest === 'undefined') {
             callback(null);
             return;
@@ -342,7 +342,7 @@ function runExternalMamSearch() {
                 return;
             }
             if (count > 0) {
-                const searchUrl = `https://www.myanonamouse.net/tor/search.php?com[text]=${encodeURIComponent(query)}&com[searchIn][]=title&com[searchIn][]=author`;
+                const searchUrl = buildMamSearchUrl(query);
                 GM_xmlhttpRequest({
                     method: 'GET',
                     url: searchUrl,
