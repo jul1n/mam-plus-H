@@ -79,7 +79,7 @@ function runExternalMamSearch() {
             author = normalizeText(authorElement && authorElement.textContent);
         }
 
-        const target = document.querySelector('.BookActions, .BookPage__rightColumn, main');
+        const target = document.querySelector('.BookActions') || document.querySelector('.BookPage__rightColumn');
         return { title, author, target, site: 'goodreads' };
     }
 
@@ -158,8 +158,22 @@ function runExternalMamSearch() {
     }
 
     function addButtons(book) {
+        if (!book || !book.title) {
+            return false;
+        }
         console.debug('[MAM+] addButtons check: title =', book.title, 'target =', book.target);
-        if (!book.title || !book.target || document.getElementById(CONTAINER_ID)) {
+
+        const existing = document.getElementById(CONTAINER_ID);
+        if (existing) {
+            if (book.target && existing.parentNode !== book.target) {
+                console.info('[MAM+] Relocating search buttons to correct target:', book.target);
+                book.target.appendChild(existing);
+                return true;
+            }
+            return false;
+        }
+
+        if (!book.target) {
             return false;
         }
 
