@@ -261,6 +261,156 @@ function runExternalMamSearch() {
         });
     }
 
+    function handleGoodreadsShelf() {
+        if (document.getElementById('mam-shelf-check-all-btn')) return;
+
+        const table = document.querySelector('#booksBody');
+        if (!table) return;
+
+        const controls = document.querySelector('#controls, #header, .leftContainer');
+        if (controls) {
+            const checkAllBtn = document.createElement('button');
+            checkAllBtn.id = 'mam-shelf-check-all-btn';
+            checkAllBtn.textContent = '🔎 Vérifier la disponibilité de tous les livres sur MAM';
+            Object.assign(checkAllBtn.style, {
+                margin: '10px 0',
+                padding: '8px 16px',
+                background: '#52766c',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                fontWeight: 'bold',
+                cursor: 'pointer'
+            });
+
+            checkAllBtn.addEventListener('click', () => {
+                checkAllBtn.disabled = true;
+                checkAllBtn.textContent = 'Verification en cours...';
+                checkAllBooks(checkAllBtn);
+            });
+
+            controls.appendChild(checkAllBtn);
+        }
+
+        const rows = document.querySelectorAll('#booksBody tr.bookvalue, #booksBody tr.review');
+        rows.forEach(row => {
+            const titleEl = row.querySelector('.field.title .value a, .title a, a[href*="/book/show/"]');
+            if (!titleEl || row.querySelector('.mam-shelf-check')) return;
+
+            const title = titleEl.textContent.replace(/\(.*?\)/g, '').trim();
+            const authorEl = row.querySelector('.field.author .value a, .author a, a[href*="/author/show/"]');
+            const author = authorEl ? authorEl.textContent.trim() : '';
+
+            const checkSpan = document.createElement('span');
+            checkSpan.className = 'mam-shelf-check';
+            checkSpan.textContent = ' [🔎 Check MAM]';
+            Object.assign(checkSpan.style, {
+                fontSize: '11px',
+                color: '#52766c',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                marginLeft: '6px'
+            });
+
+            const query = `${title} ${author}`;
+            checkSpan.addEventListener('click', () => {
+                checkSpan.textContent = ' [Vérification...]';
+                checkSingleBookOnShelf(checkSpan, query);
+            });
+
+            const targetCell = row.querySelector('.field.title .value, .title');
+            if (targetCell) {
+                targetCell.appendChild(checkSpan);
+            } else {
+                titleEl.parentNode.appendChild(checkSpan);
+            }
+        });
+    }
+
+    function checkSingleBookOnShelf(span, query) {
+        fetchTorrentCount(query, (count) => {
+            if (count === null) {
+                span.textContent = ' [MAM: Inconnu]';
+                span.style.color = '#8b969b';
+                return;
+            }
+            if (count > 0) {
+                const searchUrl = `https://www.myanonamouse.net/tor/search.php?com[text]=${encodeURIComponent(query)}&com[searchIn][]=title&com[searchIn][]=author`;
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: searchUrl,
+                    onload: function(response) {
+                        let hasEpub = false;
+                        let hasM4b = false;
+                        try {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(response.responseText, 'text/html');
+                            const results = doc.querySelectorAll('#ssr tr[id^="tdr"]');
+                            results.forEach(r => {
+                                const txt = r.textContent.toLowerCase();
+                                if (txt.includes('epub')) hasEpub = true;
+                                if (txt.includes('m4b') || txt.includes('audiobook') || txt.includes('m4a')) hasM4b = true;
+                            });
+                        } catch(e){}
+
+                        span.innerHTML = '';
+                        const link = document.createElement('a');
+                        link.href = buildMamSearchUrl(query);
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        link.style.textDecoration = 'none';
+                        link.style.fontWeight = 'bold';
+
+                        if (hasEpub && hasM4b) {
+                            link.textContent = ' [🟢 EPUB & M4B]';
+                            link.style.color = '#507b67';
+                        } else if (hasEpub) {
+                            link.textContent = ' [🟢 EPUB]';
+                            link.style.color = '#507b67';
+                        } else if (hasM4b) {
+                            link.textContent = ' [🟢 M4B]';
+                            link.style.color = '#507b67';
+                        } else {
+                            link.textContent = ` [🟢 MAM (${count})]`;
+                            link.style.color = '#507b67';
+                        }
+                        span.appendChild(link);
+                    }
+                });
+            } else {
+                span.textContent = ' [🔴 Aucun]';
+                span.style.color = '#b96060';
+            }
+        });
+    }
+
+    function checkAllBooks(btn) {
+        const spans = Array.from(document.querySelectorAll('.mam-shelf-check'));
+        let index = 0;
+
+        function next() {
+            if (index >= spans.length) {
+                btn.textContent = 'Vérification terminée !';
+                return;
+            }
+            const span = spans[index];
+            const row = span.closest('tr');
+            const titleEl = row ? row.querySelector('.field.title .value a, .title a, a[href*="/book/show/"]') : null;
+            if (titleEl) {
+                const title = titleEl.textContent.replace(/\(.*?\)/g, '').trim();
+                const authorEl = row.querySelector('.field.author .value a, .author a, a[href*="/author/show/"]');
+                const author = authorEl ? authorEl.textContent.trim() : '';
+                span.textContent = ' [Vérification...]';
+                checkSingleBookOnShelf(span, `${title} ${author}`);
+            }
+            index++;
+            btn.textContent = `Vérification : ${index} / ${spans.length}`;
+            setTimeout(next, 600);
+        }
+
+        next();
+    }
+
     function addButtons(book) {
         if (!book || !book.title) {
             return false;
@@ -340,8 +490,13 @@ function runExternalMamSearch() {
 
     function tryInstall() {
         const host = window.location.hostname.toLowerCase();
+        const path = window.location.pathname.toLowerCase();
 
         if (host.includes('goodreads.com')) {
+            if (path.includes('/review/list')) {
+                handleGoodreadsShelf();
+                return true;
+            }
             return addButtons(readGoodreadsBook());
         }
 

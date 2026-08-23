@@ -12,6 +12,8 @@
 // @match        https://*.myanonamouse.net/*
 // @match        https://www.goodreads.com/book/show/*
 // @match        https://www.goodreads.com/*/book/show/*
+// @match        https://www.goodreads.com/review/list/*
+// @match        https://www.goodreads.com/review/list?*
 // @match        https://*.babelio.com/livres/*
 // @match        https://app.thestorygraph.com/books/*
 // @match        https://*.amazon.com/*
