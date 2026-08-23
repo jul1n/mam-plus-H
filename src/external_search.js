@@ -79,7 +79,7 @@ function runExternalMamSearch() {
             author = normalizeText(authorElement && authorElement.textContent);
         }
 
-        const target = document.querySelector('.BookActions') || document.querySelector('.BookPage__rightColumn');
+        const target = document.querySelector('.BookActions');
         return { title, author, target, site: 'goodreads' };
     }
 
@@ -167,7 +167,16 @@ function runExternalMamSearch() {
         if (existing) {
             if (book.target && existing.parentNode !== book.target) {
                 console.info('[MAM+] Relocating search buttons to correct target:', book.target);
-                book.target.appendChild(existing);
+                if (book.site === 'goodreads') {
+                    const secondButton = book.target.children[1];
+                    if (secondButton) {
+                        book.target.insertBefore(existing, secondButton);
+                    } else {
+                        book.target.appendChild(existing);
+                    }
+                } else {
+                    book.target.appendChild(existing);
+                }
                 return true;
             }
             return false;
@@ -187,7 +196,8 @@ function runExternalMamSearch() {
                 flexDirection: 'column',
                 gap: '8px',
                 width: '100%',
-                marginTop: '8px'
+                marginTop: '8px',
+                marginBottom: '8px'
             });
         } else {
             Object.assign(container.style, {
@@ -209,7 +219,17 @@ function runExternalMamSearch() {
             createSearchButton('🔎 Search MAM (Title Only)', book.title, book.site, Boolean(book.author))
         );
 
-        book.target.appendChild(container);
+        if (book.site === 'goodreads') {
+            const secondButton = book.target.children[1];
+            if (secondButton) {
+                book.target.insertBefore(container, secondButton);
+            } else {
+                book.target.appendChild(container);
+            }
+        } else {
+            book.target.appendChild(container);
+        }
+
         console.info(`[MAM+] Added ${book.site} → MAM search buttons.`, book.title, book.author);
         return true;
     }
