@@ -79,19 +79,19 @@ function runExternalMamSearch() {
 
         if (!title) {
             const titleElement = document.querySelector(
-                '[data-testid="bookTitle"], h1.Text__title1, h1.BookPageTitleSection__title'
+                '[data-testid="bookTitle"], h1.Text__title1, h1.BookPageTitleSection__title, .bookTitle, h1#bookTitle'
             );
             title = normalizeText(titleElement && titleElement.textContent);
         }
 
         if (!author) {
             const authorElement = document.querySelector(
-                '.ContributorLink__name, [data-testid="name"], a[href*="/author/show/"]'
+                '.ContributorLink__name, [data-testid="name"], a[href*="/author/show/"], .bookAuthor, a.authorName'
             );
             author = normalizeText(authorElement && authorElement.textContent);
         }
 
-        const target = document.querySelector('.BookActions');
+        const target = document.querySelector('.BookActions, [data-testid="book-actions"], .bookActions, [data-testid="bookActions"], .BookPage__bookActions');
         return { title, author, target, site: 'goodreads' };
     }
 
@@ -432,7 +432,6 @@ function runExternalMamSearch() {
         if (!book || !book.title) {
             return false;
         }
-        console.debug('[MAM+] addButtons check: title =', book.title, 'target =', book.target);
 
         const existing = document.getElementById(CONTAINER_ID);
         if (existing) {
@@ -533,6 +532,15 @@ function runExternalMamSearch() {
         return false;
     }
 
+    let throttleTimeout = null;
+    function throttledInstall() {
+        if (throttleTimeout) return;
+        throttleTimeout = setTimeout(() => {
+            tryInstall();
+            throttleTimeout = null;
+        }, 300);
+    }
+
     function start() {
         tryInstall();
 
@@ -543,7 +551,7 @@ function runExternalMamSearch() {
         }
 
         const observer = new MutationObserver(() => {
-            tryInstall();
+            throttledInstall();
         });
 
         observer.observe(root, { childList: true, subtree: true });
