@@ -1,354 +1,690 @@
-// MAM+ Modern Theme styling
+/* =========================================================
+   MAM MODERN LIGHT
+   Surcouche visuelle uniquement
+   ========================================================= */
 
-.mp_modern {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+html.mam-modern {
+    --mam-bg: #f4f6f7;
+    --mam-surface: #ffffff;
+    --mam-surface-soft: #eef2f1;
 
-    // Root variables for colors and styles
-    &.mp_dark {
-        --bg-primary: #121212;
-        --bg-card: #1e1e1e;
-        --bg-card-hover: #262626;
-        --border-color: #2a2a2a;
-        --text-primary: #e0e0e0;
-        --text-secondary: #aaaaaa;
-        --accent-color: #ffd700;
-        --accent-hover: #ffea70;
-        --accent-bg-glow: rgba(255, 215, 0, 0.1);
-        --input-bg: #2d2d2d;
-        --input-border: #404040;
+    --mam-text: #263238;
+    --mam-text-soft: #657177;
+    --mam-text-faint: #8b969b;
+
+    --mam-primary: #52766c;
+    --mam-primary-hover: #42645b;
+    --mam-primary-soft: #e7efec;
+
+    --mam-accent: #b99448;
+    --mam-accent-soft: #f4eddf;
+
+    --mam-border: #dde3e5;
+    --mam-border-soft: #e9edef;
+
+    --mam-danger: #b96060;
+    --mam-danger-soft: #f7eaea;
+
+    --mam-success: #507b67;
+    --mam-success-soft: #e8f1ed;
+
+    --mam-radius: 12px;
+    --mam-radius-lg: 16px;
+
+    --mam-shadow:
+        0 1px 2px rgba(20, 30, 35, .04),
+        0 5px 18px rgba(20, 30, 35, .045);
+
+    --mam-content-width: 1440px;
+}
+
+
+/* =========================================================
+   PAGE
+   ========================================================= */
+
+html.mam-modern,
+html.mam-modern body,
+html.mam-modern #siteMain {
+    background: var(--mam-bg) !important;
+    color: var(--mam-text) !important;
+
+    font-family:
+        Inter,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif !important;
+
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+html.mam-modern body {
+    margin: 0 !important;
+}
+
+
+/* =========================================================
+   LIENS
+   ========================================================= */
+
+html.mam-modern a {
+    color: var(--mam-primary) !important;
+    text-decoration: none;
+}
+
+html.mam-modern a:hover {
+    color: var(--mam-primary-hover) !important;
+}
+
+
+/* =========================================================
+   BANNIÈRE
+   ========================================================= */
+
+html.mam-modern header[role="banner"] {
+    max-width: var(--mam-content-width);
+    margin: 16px auto 10px;
+    padding: 0 18px;
+    box-sizing: border-box;
+}
+
+html.mam-modern #msb {
+    display: block;
+    overflow: hidden;
+    border-radius: var(--mam-radius-lg);
+}
+
+html.mam-modern #msb img {
+    display: block;
+    width: 100%;
+    max-height: 125px;
+    object-fit: cover;
+}
+
+
+/* =========================================================
+   ZONE RECHERCHE
+   ========================================================= */
+
+html.mam-modern #preNav {
+    max-width: var(--mam-content-width);
+    margin: 0 auto 10px !important;
+
+    padding: 10px 18px !important;
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    box-sizing: border-box;
+
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html.mam-modern #mainSearch {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    flex: 0 1 650px;
+}
+
+html.mam-modern #ts {
+    flex: 1;
+
+    min-width: 220px;
+    height: 40px;
+
+    box-sizing: border-box;
+
+    padding: 0 14px !important;
+
+    background: var(--mam-surface) !important;
+    color: var(--mam-text) !important;
+
+    border: 1px solid var(--mam-border) !important;
+    border-radius: 10px !important;
+
+    outline: none !important;
+
+    box-shadow: none !important;
+
+    font-size: 14px;
+}
+
+html.mam-modern #ts:focus {
+    border-color: var(--mam-primary) !important;
+    box-shadow: 0 0 0 3px rgba(82, 118, 108, .12) !important;
+}
+
+html.mam-modern #tss {
+    height: 40px;
+
+    padding: 0 30px 0 11px !important;
+
+    background-color: var(--mam-surface) !important;
+    color: var(--mam-text-soft) !important;
+
+    border: 1px solid var(--mam-border) !important;
+    border-radius: 10px !important;
+}
+
+
+/* =========================================================
+   BOUTONS
+   ========================================================= */
+
+html.mam-modern input[type="submit"],
+html.mam-modern input[type="button"],
+html.mam-modern button {
+    min-height: 38px;
+
+    padding: 0 15px !important;
+
+    background: var(--mam-primary) !important;
+    color: #fff !important;
+
+    border: 0 !important;
+    border-radius: 9px !important;
+
+    font-family: inherit !important;
+    font-weight: 600 !important;
+
+    cursor: pointer;
+
+    box-shadow: none !important;
+
+    transition:
+        background .15s ease,
+        transform .15s ease;
+}
+
+html.mam-modern input[type="submit"]:hover,
+html.mam-modern input[type="button"]:hover,
+html.mam-modern button:hover {
+    background: var(--mam-primary-hover) !important;
+}
+
+
+/* =========================================================
+   STATISTIQUES UTILISATEUR
+   ========================================================= */
+
+html.mam-modern #userStat {
+    max-width: var(--mam-content-width);
+
+    box-sizing: border-box;
+
+    margin: 0 auto 8px !important;
+    padding: 7px 18px !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html.mam-modern #userStat > a,
+html.mam-modern #userStat > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    min-height: 27px;
+
+    padding: 2px 10px !important;
+
+    background: var(--mam-surface) !important;
+    color: var(--mam-text-soft) !important;
+
+    border: 1px solid var(--mam-border-soft) !important;
+    border-radius: 999px !important;
+
+    font-size: 12px !important;
+}
+
+
+/* =========================================================
+   MENU PRINCIPAL
+   ========================================================= */
+
+html.mam-modern #mainmenu {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    background: rgba(255,255,255,.94) !important;
+    backdrop-filter: blur(12px);
+
+    border-top: 1px solid var(--mam-border-soft) !important;
+    border-bottom: 1px solid var(--mam-border) !important;
+
+    box-shadow: 0 3px 12px rgba(30,40,45,.04) !important;
+}
+
+html.mam-modern #menu {
+    max-width: var(--mam-content-width);
+
+    box-sizing: border-box;
+
+    margin: 0 auto !important;
+    padding: 5px 18px !important;
+
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    background: transparent !important;
+}
+
+html.mam-modern #menu > li {
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html.mam-modern #menu > li > a {
+    display: flex;
+    align-items: center;
+
+    min-height: 36px;
+
+    box-sizing: border-box;
+
+    padding: 0 11px !important;
+
+    color: var(--mam-text) !important;
+    background: transparent !important;
+
+    border: 0 !important;
+    border-radius: 8px !important;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    transition: background .15s ease;
+}
+
+html.mam-modern #menu > li > a:hover {
+    background: var(--mam-primary-soft) !important;
+    color: var(--mam-primary-hover) !important;
+}
+
+
+/* =========================================================
+   SOUS-MENUS
+   ========================================================= */
+
+html.mam-modern #menu li ul {
+    padding: 6px !important;
+
+    background: var(--mam-surface) !important;
+
+    border: 1px solid var(--mam-border) !important;
+    border-radius: 10px !important;
+
+    box-shadow:
+        0 10px 30px rgba(20,30,35,.12) !important;
+}
+
+html.mam-modern #menu li ul li,
+html.mam-modern #menu li ul li a {
+    background: transparent !important;
+    border: 0 !important;
+}
+
+html.mam-modern #menu li ul li a {
+    display: block;
+
+    padding: 7px 10px !important;
+
+    color: var(--mam-text) !important;
+
+    border-radius: 6px !important;
+
+    white-space: nowrap;
+}
+
+html.mam-modern #menu li ul li a:hover {
+    background: var(--mam-primary-soft) !important;
+}
+
+
+/* Donation : supprimer le vieux rouge sombre */
+
+html.mam-modern #menu .mmDonBox > a {
+    background: var(--mam-accent-soft) !important;
+    color: #7b632f !important;
+
+    font-weight: 600 !important;
+}
+
+
+/* =========================================================
+   NEWS TICKER
+   ========================================================= */
+
+html.mam-modern #hrnews {
+    max-width: var(--mam-content-width);
+
+    box-sizing: border-box;
+
+    margin: 10px auto !important;
+    padding: 8px 16px !important;
+
+    background: var(--mam-accent-soft) !important;
+
+    border: 1px solid #e7dcc3 !important;
+    border-radius: 10px !important;
+
+    color: #6f5b32 !important;
+}
+
+
+/* =========================================================
+   CONTENU PRINCIPAL
+   ========================================================= */
+
+html.mam-modern main {
+    max-width: var(--mam-content-width);
+
+    box-sizing: border-box;
+
+    margin: 16px auto 30px !important;
+    padding: 0 18px !important;
+}
+
+html.mam-modern #mainTable {
+    width: 100% !important;
+
+    border: 0 !important;
+    background: transparent !important;
+}
+
+html.mam-modern #mainLeft {
+    width: 0 !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+}
+
+html.mam-modern #mainRight {
+    width: 100% !important;
+    padding: 0 !important;
+}
+
+
+/* =========================================================
+   CARTES
+   ========================================================= */
+
+html.mam-modern .blockCon {
+    box-sizing: border-box !important;
+
+    background: var(--mam-surface) !important;
+
+    border: 1px solid var(--mam-border) !important;
+    border-radius: var(--mam-radius) !important;
+
+    box-shadow: var(--mam-shadow) !important;
+
+    overflow: hidden;
+}
+
+
+/*
+ * Très important :
+ * neutralise les dimensions écrites inline :
+ * 810px, 820px, 450px, etc.
+ */
+
+html.mam-modern #fpTor,
+html.mam-modern #fpPosts,
+html.mam-modern #fpNM,
+html.mam-modern #fpStats,
+html.mam-modern #fpStatus,
+html.mam-modern #fpOnline {
+    min-width: 0 !important;
+    max-width: none !important;
+
+    width: 100% !important;
+}
+
+
+/* Anciennes décorations */
+
+html.mam-modern .bHi,
+html.mam-modern .blockFoot {
+    display: none !important;
+}
+
+
+/* En-tête de carte */
+
+html.mam-modern .blockHead {
+    min-height: 0 !important;
+
+    padding: 0 !important;
+
+    background: var(--mam-surface) !important;
+
+    border: 0 !important;
+    border-bottom: 1px solid var(--mam-border-soft) !important;
+}
+
+html.mam-modern .blockHeadCon {
+    padding: 13px 16px !important;
+
+    background: transparent !important;
+}
+
+html.mam-modern .blockHead h4 {
+    margin: 0 !important;
+
+    color: var(--mam-text) !important;
+
+    font-size: 14px !important;
+    font-weight: 650 !important;
+
+    text-shadow: none !important;
+}
+
+
+/* Corps carte */
+
+html.mam-modern .blockBody,
+html.mam-modern .blockBodyCon {
+    background: var(--mam-surface) !important;
+    color: var(--mam-text) !important;
+
+    border: 0 !important;
+}
+
+html.mam-modern .blockBodyCon {
+    padding: 14px 16px !important;
+}
+
+
+/* =========================================================
+   PAGE D'ACCUEIL / LAYOUT
+   ========================================================= */
+
+html.mam-modern #mainBody {
+    padding: 6px !important;
+}
+
+html.mam-modern #mainBody > .flexbox {
+    display: flex !important;
+
+    gap: 16px !important;
+
+    flex-wrap: wrap !important;
+    align-items: flex-start !important;
+
+    margin-top: 16px;
+}
+
+
+/* Titres Recent News */
+
+html.mam-modern .mainPageNewsHead {
+    margin: 8px 0 12px !important;
+
+    font-size: 22px !important;
+    font-weight: 650 !important;
+
+    color: var(--mam-text) !important;
+}
+
+html.mam-modern .mainPageNews,
+html.mam-modern .mainPageNewsSub {
+    margin: 4px 0 !important;
+    padding: 7px 10px !important;
+
+    background: var(--mam-surface-soft) !important;
+
+    border-radius: 7px !important;
+
+    color: var(--mam-text-soft) !important;
+}
+
+
+/* =========================================================
+   TABLEAUX
+   ========================================================= */
+
+html.mam-modern table {
+    color: var(--mam-text) !important;
+}
+
+html.mam-modern .blockBody table {
+    width: 100%;
+
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+}
+
+html.mam-modern .blockBody table td,
+html.mam-modern .blockBody table th {
+    padding: 7px 9px !important;
+
+    border-color: var(--mam-border-soft) !important;
+}
+
+html.mam-modern .blockBody table tr:hover td {
+    background: #f7f9f9 !important;
+}
+
+
+/* =========================================================
+   SHOUTBOX
+   ========================================================= */
+
+html.mam-modern #fpShout {
+    min-width: 0 !important;
+
+    background: var(--mam-surface) !important;
+}
+
+html.mam-modern #sbMenuTabs {
+    padding: 5px !important;
+
+    background: var(--mam-surface-soft) !important;
+
+    border-radius: 8px !important;
+}
+
+html.mam-modern #sbMenuTabs li a {
+    border-radius: 6px !important;
+}
+
+html.mam-modern #shbox_text,
+html.mam-modern textarea,
+html.mam-modern input[type="text"] {
+    background: var(--mam-surface) !important;
+    color: var(--mam-text) !important;
+
+    border: 1px solid var(--mam-border) !important;
+    border-radius: 8px !important;
+
+    box-shadow: none !important;
+}
+
+
+/* =========================================================
+   SERVER STATUS
+   ========================================================= */
+
+html.mam-modern .servStatBlock {
+    margin: 6px 0 !important;
+    padding: 10px 12px !important;
+
+    background: var(--mam-surface-soft) !important;
+
+    border: 0 !important;
+    border-radius: 8px !important;
+}
+
+html.mam-modern .servLoadBar {
+    overflow: hidden;
+
+    background: #e5e9e8 !important;
+
+    border: 0 !important;
+    border-radius: 999px !important;
+}
+
+
+/* =========================================================
+   PIED DE PAGE
+   ========================================================= */
+
+html.mam-modern .footRow {
+    padding: 24px !important;
+
+    color: var(--mam-text-faint) !important;
+    background: transparent !important;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    html.mam-modern #preNav {
+        flex-direction: column;
     }
 
-    &.mp_light {
-        --bg-primary: #f5f6f8;
-        --bg-card: #ffffff;
-        --bg-card-hover: #f9fafb;
-        --border-color: #e5e7eb;
-        --text-primary: #1f2937;
-        --text-secondary: #4b5563;
-        --accent-color: #d97706;
-        --accent-hover: #b45309;
-        --accent-bg-glow: rgba(217, 119, 6, 0.1);
-        --input-bg: #ffffff;
-        --input-border: #d1d5db;
+    html.mam-modern #mainSearch {
+        width: 100%;
+        flex-basis: auto;
     }
 
-    // Apply primary background and fonts
-    background-color: var(--bg-primary) !important;
-    color: var(--text-primary) !important;
-
-    // Modernize links
-    a {
-        color: var(--accent-color) !important;
-        text-decoration: none !important;
-        transition: color 0.2s ease;
-        &:hover {
-            color: var(--accent-hover) !important;
-            text-decoration: underline !important;
-        }
+    html.mam-modern #menu {
+        overflow-x: auto;
+        justify-content: flex-start;
     }
 
-    // PreNav bar (search header)
-    #preNav {
-        background-color: var(--bg-card) !important;
-        border-bottom: 1px solid var(--border-color) !important;
-        padding: 10px 20px !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-        border-radius: 8px !important;
-        margin: 10px 10px 0 10px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        flex-wrap: wrap !important;
-        gap: 12px !important;
-        height: auto !important;
-
-        .tP {
-            color: var(--text-secondary) !important;
-            font-size: 0.9em !important;
-            font-weight: 500 !important;
-        }
-
-        #mainSearch {
-            display: flex !important;
-            align-items: center !important;
-            gap: 6px !important;
-
-            input[type="text"] {
-                background: var(--input-bg) !important;
-                border: 1px solid var(--input-border) !important;
-                color: var(--text-primary) !important;
-                border-radius: 20px !important;
-                padding: 6px 16px !important;
-                outline: none !important;
-                transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
-
-                &:focus {
-                    border-color: var(--accent-color) !important;
-                    box-shadow: 0 0 0 3px var(--accent-bg-glow) !important;
-                }
-            }
-
-            select {
-                background: var(--input-bg) !important;
-                border: 1px solid var(--input-border) !important;
-                color: var(--text-primary) !important;
-                border-radius: 20px !important;
-                padding: 6px 12px !important;
-                outline: none !important;
-            }
-
-            input[type="submit"] {
-                background: var(--accent-color) !important;
-                color: var(--bg-primary) !important;
-                border: none !important;
-                border-radius: 20px !important;
-                padding: 6px 16px !important;
-                font-weight: bold !important;
-                cursor: pointer !important;
-                transition: background 0.2s ease !important;
-
-                &:hover {
-                    background: var(--accent-hover) !important;
-                }
-            }
-        }
+    html.mam-modern #menu > li {
+        flex: 0 0 auto;
     }
 
-    // User stat bar
-    #userStat {
-        background-color: var(--bg-card) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 8px !important;
-        margin: 10px 10px 0 10px !important;
-        padding: 8px 16px !important;
-        display: flex !important;
-        justify-content: space-around !important;
-        align-items: center !important;
-        font-size: 0.95em !important;
-        color: var(--text-secondary) !important;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
-
-        a, span {
-            color: var(--text-primary) !important;
-            font-weight: 600 !important;
-        }
+    html.mam-modern #mainBody > .flexbox {
+        display: block !important;
     }
 
-    // Modern navbar (#menu)
-    #mainmenu {
-        margin: 10px 10px 15px 10px !important;
-        background: var(--bg-card) !important;
-        border-radius: 8px !important;
-        border: 1px solid var(--border-color) !important;
-        padding: 4px 8px !important;
-        height: auto !important;
-
-        #menu {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            gap: 4px !important;
-            list-style: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-
-            & > li {
-                & > a {
-                    padding: 8px 16px !important;
-                    display: block !important;
-                    font-weight: 600 !important;
-                    color: var(--text-primary) !important;
-                    border-radius: 6px !important;
-                    transition: background 0.2s ease, color 0.2s ease !important;
-                    background: transparent !important;
-                    border: none !important;
-
-                    &:hover {
-                        background: var(--bg-card-hover) !important;
-                        color: var(--accent-color) !important;
-                    }
-                }
-            }
-        }
-    }
-
-    // Cards (.blockCon)
-    .blockCon {
-        background: var(--bg-card) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
-        margin-bottom: 20px !important;
-        overflow: hidden !important;
-        padding: 0 !important;
-
-        .blockHead {
-            background: var(--bg-card-hover) !important;
-            border-bottom: 1px solid var(--border-color) !important;
-            padding: 12px 20px !important;
-            height: auto !important;
-
-            .blockHeadCon h4 {
-                margin: 0 !important;
-                font-size: 1.1em !important;
-                font-weight: 700 !important;
-                color: var(--text-primary) !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: space-between !important;
-            }
-        }
-
-        .blockBody {
-            background: transparent !important;
-            border: none !important;
-            padding: 16px 20px !important;
-        }
-
-        .blockFoot, .bHi {
-            display: none !important; // Hide old decorative elements
-        }
-    }
-
-    // Modernize Tables
-    table {
-        border-collapse: collapse !important;
-        width: 100% !important;
-        margin: 10px 0 !important;
-
-        th, td {
-            padding: 12px 16px !important;
-            border-bottom: 1px solid var(--border-color) !important;
-            text-align: left !important;
-        }
-
-        tr {
-            background: transparent !important;
-            transition: background 0.2s ease !important;
-            &:hover {
-                background: var(--bg-card-hover) !important;
-            }
-        }
-
-        .row1, .alternateColor {
-            background: transparent !important;
-        }
-        
-        .row2 {
-            background: var(--bg-card-hover) !important;
-            font-weight: 600 !important;
-        }
-    }
-
-    // Modernize forms, details, and buttons
-    input[type="text"], input[type="number"], select, textarea {
-        background: var(--input-bg) !important;
-        border: 1px solid var(--input-border) !important;
-        color: var(--text-primary) !important;
-        border-radius: 6px !important;
-        padding: 8px 12px !important;
-        outline: none !important;
-        transition: border-color 0.2s ease !important;
-        font-family: inherit !important;
-
-        &:focus {
-            border-color: var(--accent-color) !important;
-        }
-    }
-
-    // Details/Summary elements on search page
-    details {
-        background: var(--bg-card-hover) !important;
-        border: 1px solid var(--border-color) !important;
-        border-radius: 8px !important;
-        padding: 12px 16px !important;
-        margin: 10px 0 !important;
-
-        summary {
-            font-weight: bold !important;
-            cursor: pointer !important;
-            outline: none !important;
-            color: var(--text-primary) !important;
-        }
-    }
-
-    // Category Grid
-    .categoryColumns {
-        display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
-        gap: 8px !important;
-        border: none !important;
-        padding: 10px 0 !important;
-
-        label {
-            display: flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            background: var(--bg-card) !important;
-            border: 1px solid var(--border-color) !important;
-            padding: 8px 12px !important;
-            border-radius: 6px !important;
-            cursor: pointer !important;
-            transition: all 0.2s ease !important;
-
-            &:hover {
-                background: var(--bg-card-hover) !important;
-                border-color: var(--accent-color) !important;
-            }
-
-            input[type="checkbox"] {
-                accent-color: var(--accent-color) !important;
-            }
-        }
-    }
-
-    // Shoutbox
-    #shoutbox {
-        border-radius: 8px !important;
-        background: var(--bg-card) !important;
-        border: 1px solid var(--border-color) !important;
-
-        .sbf {
-            background: transparent !important;
-            padding: 12px !important;
-        }
-
-        #sbform {
-            display: flex !important;
-            gap: 8px !important;
-            padding: 10px !important;
-            border-top: 1px solid var(--border-color) !important;
-
-            input[type="text"] {
-                flex-grow: 1 !important;
-            }
-
-            input[type="submit"] {
-                background: var(--accent-color) !important;
-                color: var(--bg-primary) !important;
-                border: none !important;
-                border-radius: 6px !important;
-                padding: 8px 16px !important;
-                font-weight: bold !important;
-                cursor: pointer !important;
-            }
-        }
-    }
-
-    // ServLoadBar
-    .servLoadBar {
-        background: var(--border-color) !important;
-        border-radius: 4px !important;
-        height: 8px !important;
-        overflow: hidden !important;
-        margin-top: 4px !important;
-
-        & > div {
-            height: 100% !important;
-            border-radius: 4px !important;
-            
-            &.green { background-color: #10b981 !important; }
-            &.yellow { background-color: #f59e0b !important; }
-            &.red { background-color: #ef4444 !important; }
-        }
+    html.mam-modern .blockCon {
+        margin-bottom: 14px !important;
     }
 }

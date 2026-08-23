@@ -50,7 +50,7 @@ class Style {
             if (body) {
                 body.classList.add(`mp_${this._theme}`);
                 if (GM_getValue('modern_theme', true)) {
-                    body.classList.add('mp_modern');
+                    document.documentElement.classList.add('mam-modern');
                 }
             } else if (MP.DEBUG) {
                 console.warn(`Body is ${body}`);
