@@ -292,13 +292,20 @@ function runExternalMamSearch() {
             controls.appendChild(checkAllBtn);
         }
 
-        const rows = document.querySelectorAll('#booksBody tr.bookvalue, #booksBody tr.review');
+        const rows = document.querySelectorAll('#booksBody tr, #books tr');
         rows.forEach(row => {
-            const titleEl = row.querySelector('.field.title .value a, .title a, a[href*="/book/show/"]');
+            let titleEl = null;
+            const bookLinks = row.querySelectorAll('a[href*="/book/show/"]');
+            for (const link of bookLinks) {
+                if (link.textContent.trim().length > 0) {
+                    titleEl = link;
+                    break;
+                }
+            }
             if (!titleEl || row.querySelector('.mam-shelf-check')) return;
 
             const title = titleEl.textContent.replace(/\(.*?\)/g, '').trim();
-            const authorEl = row.querySelector('.field.author .value a, .author a, a[href*="/author/show/"]');
+            const authorEl = row.querySelector('a[href*="/author/show/"]');
             const author = authorEl ? authorEl.textContent.trim() : '';
 
             const checkSpan = document.createElement('span');
@@ -395,10 +402,19 @@ function runExternalMamSearch() {
             }
             const span = spans[index];
             const row = span.closest('tr');
-            const titleEl = row ? row.querySelector('.field.title .value a, .title a, a[href*="/book/show/"]') : null;
+            let titleEl = null;
+            if (row) {
+                const bookLinks = row.querySelectorAll('a[href*="/book/show/"]');
+                for (const link of bookLinks) {
+                    if (link.textContent.trim().length > 0) {
+                        titleEl = link;
+                        break;
+                    }
+                }
+            }
             if (titleEl) {
                 const title = titleEl.textContent.replace(/\(.*?\)/g, '').trim();
-                const authorEl = row.querySelector('.field.author .value a, .author a, a[href*="/author/show/"]');
+                const authorEl = row.querySelector('a[href*="/author/show/"]');
                 const author = authorEl ? authorEl.textContent.trim() : '';
                 span.textContent = ' [Vérification...]';
                 checkSingleBookOnShelf(span, `${title} ${author}`);
