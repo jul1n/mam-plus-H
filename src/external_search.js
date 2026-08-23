@@ -228,31 +228,33 @@ function runExternalMamSearch() {
     }
 
     function fetchTorrentCount(query, callback) {
-        const searchUrl = buildMamSearchUrl(query);
         if (typeof GM_xmlhttpRequest === 'undefined') {
-            callback(null);
+            callback(null, []);
             return;
         }
+        const jsonUrl = `https://www.myanonamouse.net/tor/js/loadSearchJSONbasic.php?tor[text]=${encodeURIComponent(normalizeText(query))}&tor[searchType]=all&tor[searchIn]=torrents`;
         GM_xmlhttpRequest({
             method: 'GET',
-            url: searchUrl,
+            url: jsonUrl,
             onload: function(response) {
                 try {
                     if (response.responseText.includes('login') || response.responseText.includes('Forgot password')) {
-                        callback(null);
+                        callback(null, []);
                         return;
                     }
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(response.responseText, 'text/html');
-                    const results = doc.querySelectorAll('#ssr tr[id^="tdr"]');
-                    callback(results.length);
+                    const obj = JSON.parse(response.responseText);
+                    if (obj && Array.isArray(obj.data)) {
+                        callback(obj.data.length, obj.data);
+                    } else {
+                        callback(0, []);
+                    }
                 } catch (e) {
                     console.debug('[MAM+] Error parsing search count:', e);
-                    callback(null);
+                    callback(null, []);
                 }
             },
             onerror: function() {
-                callback(null);
+                callback(null, []);
             }
         });
     }
@@ -344,55 +346,45 @@ function runExternalMamSearch() {
     }
 
     function checkSingleBookOnShelf(span, query) {
-        fetchTorrentCount(query, (count) => {
+        fetchTorrentCount(query, (count, results) => {
             if (count === null) {
                 span.textContent = ' [MAM: Inconnu]';
                 span.style.color = '#8b969b';
                 return;
             }
             if (count > 0) {
-                const searchUrl = buildMamSearchUrl(query);
-                GM_xmlhttpRequest({
-                    method: 'GET',
-                    url: searchUrl,
-                    onload: function(response) {
-                        let hasEpub = false;
-                        let hasM4b = false;
-                        try {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(response.responseText, 'text/html');
-                            const results = doc.querySelectorAll('#ssr tr[id^="tdr"]');
-                            results.forEach(r => {
-                                const txt = r.textContent.toLowerCase();
-                                if (txt.includes('epub')) hasEpub = true;
-                                if (txt.includes('m4b') || txt.includes('audiobook') || txt.includes('m4a')) hasM4b = true;
-                            });
-                        } catch(e){}
+                let hasEpub = false;
+                let hasM4b = false;
+                try {
+                    results.forEach(item => {
+                        const txt = JSON.stringify(item).toLowerCase();
+                        if (txt.includes('epub')) hasEpub = true;
+                        if (txt.includes('m4b') || txt.includes('audiobook') || txt.includes('m4a')) hasM4b = true;
+                    });
+                } catch(e){}
 
-                        span.innerHTML = '';
-                        const link = document.createElement('a');
-                        link.href = buildMamSearchUrl(query);
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        link.style.textDecoration = 'none';
-                        link.style.fontWeight = 'bold';
+                span.innerHTML = '';
+                const link = document.createElement('a');
+                link.href = buildMamSearchUrl(query);
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.style.textDecoration = 'none';
+                link.style.fontWeight = 'bold';
 
-                        if (hasEpub && hasM4b) {
-                            link.textContent = ' [🟢 EPUB & M4B]';
-                            link.style.color = '#507b67';
-                        } else if (hasEpub) {
-                            link.textContent = ' [🟢 EPUB]';
-                            link.style.color = '#507b67';
-                        } else if (hasM4b) {
-                            link.textContent = ' [🟢 M4B]';
-                            link.style.color = '#507b67';
-                        } else {
-                            link.textContent = ` [🟢 MAM (${count})]`;
-                            link.style.color = '#507b67';
-                        }
-                        span.appendChild(link);
-                    }
-                });
+                if (hasEpub && hasM4b) {
+                    link.textContent = ' [🟢 EPUB & M4B]';
+                    link.style.color = '#507b67';
+                } else if (hasEpub) {
+                    link.textContent = ' [🟢 EPUB]';
+                    link.style.color = '#507b67';
+                } else if (hasM4b) {
+                    link.textContent = ' [🟢 M4B]';
+                    link.style.color = '#507b67';
+                } else {
+                    link.textContent = ` [🟢 MAM (${count})]`;
+                    link.style.color = '#507b67';
+                }
+                span.appendChild(link);
             } else {
                 span.textContent = ' [🔴 Aucun]';
                 span.style.color = '#b96060';
