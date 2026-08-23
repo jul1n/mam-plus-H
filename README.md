@@ -8,7 +8,11 @@
 
 Une version personnalisée (fork) de MAM+ contenant :
 - Diverses optimisations et améliorations pour MyAnonamouse (MAM).
-- **Intégration Goodreads & Amazon → MAM** : Ajoute automatiquement des boutons de recherche 🔎 directement sur les pages de livres de Goodreads (dans la barre latérale sous "Want to Read") et sur les pages produit d'Amazon. Cela vous permet de rechercher instantanément les torrents correspondants sur MAM (recherche par titre seul ou titre + auteur).
+- **Évolutions par rapport au script MAM+ d'origine :**
+  - **Intégration Goodreads & Amazon → MAM autonome** : Ajout de boutons de recherche 🔎 sur Goodreads (insérés élégamment entre le bouton de lecture et le bouton d'achat Amazon) et Amazon pour lancer des recherches directes sur MAM (Titre seul / Titre + Auteur). Cette logique est complètement isolée pour une meilleure stabilité et performance.
+  - **Support d'installation en parallèle** : Le script a été renommé (`mam-plus-H`), et les métadonnées (auteur `jul1n`, namespace) modifiées pour vous permettre d'installer et d'utiliser cette version améliorée en parallèle du script officiel `mam-plus` sans aucun conflit de mise à jour sous Tampermonkey.
+  - **Correction des liens de redirection** : Résout les problèmes de redirection vers la page de préférences depuis des sites externes (comme Goodreads) en convertissant les chemins relatifs de MAM en URLs absolues sécurisées.
+  - **Gestion dynamique de React sur Goodreads** : Utilisation d'un observateur DOM persistant (`MutationObserver`) pour s'assurer que les boutons MAM restent visibles, même si React rafraîchit dynamiquement la page Goodreads après le chargement initial.
 
 Vous ne savez pas ce qu'est MAM ? Ce script ne vous sera d'aucune utilité.
 
@@ -24,7 +28,11 @@ Vous devez avoir installé une extension de navigateur pour scripts utilisateur 
 
 A custom fork of MAM+ containing:
 - Tweaks and enhancements for MyAnonamouse (MAM).
-- **Goodreads & Amazon → MAM integration**: Automatically adds 🔎 search buttons directly on Goodreads book pages (within the sidebar under "Want to Read") and Amazon product pages, allowing you to instantly search for the corresponding torrents on MAM (supporting title-only and title+author searches).
+- **Key Enhancements compared to the original MAM+ script:**
+  - **Decoupled Goodreads & Amazon → MAM Integration**: Adds native-looking search buttons 🔎 on Goodreads (positioned exactly between the read status and Amazon buttons) and Amazon to search MAM (Title Only / Title + Author). The integration logic is fully isolated to prevent performance regressions on other pages.
+  - **Parallel Installation Support**: Renamed to `mam-plus-H` with updated author (`jul1n`) and namespace metadata, allowing you to run this custom version side-by-side with the official `mam-plus` script in Tampermonkey without update conflicts.
+  - **Redirect Link Fixes**: Fixes issues where preferences notification redirects broke on external sites (like Goodreads) by translating MAM relative URLs to absolute secure paths.
+  - **Goodreads React Lifecycle Handling**: Utilizes a persistent `MutationObserver` to ensure the search buttons are automatically re-injected if Goodreads' React runtime redraws the action column after initial load.
 
 Don't know what MAM is? This script won't be very useful to you then.
 
