@@ -194,7 +194,7 @@ function runExternalMamSearch() {
     }
 
     function start() {
-        if (tryInstall()) return;
+        tryInstall();
 
         const root = document.documentElement;
         if (!root) {
@@ -203,12 +203,10 @@ function runExternalMamSearch() {
         }
 
         const observer = new MutationObserver(() => {
-            if (tryInstall()) observer.disconnect();
+            tryInstall();
         });
 
         observer.observe(root, { childList: true, subtree: true });
-
-        setTimeout(() => observer.disconnect(), 30000);
     }
 
     start();
