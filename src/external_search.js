@@ -355,11 +355,15 @@ function runExternalMamSearch() {
             if (count > 0) {
                 let hasEpub = false;
                 let hasM4b = false;
+                let hasPdf = false;
+                let hasMp3 = false;
                 try {
                     results.forEach(item => {
-                        const txt = JSON.stringify(item).toLowerCase();
-                        if (txt.includes('epub')) hasEpub = true;
-                        if (txt.includes('m4b') || txt.includes('audiobook') || txt.includes('m4a')) hasM4b = true;
+                        const title = (item.title || '').toLowerCase();
+                        if (title.includes('epub')) hasEpub = true;
+                        if (title.includes('m4b') || title.includes('m4a')) hasM4b = true;
+                        if (title.includes('pdf')) hasPdf = true;
+                        if (title.includes('mp3')) hasMp3 = true;
                     });
                 } catch(e){}
 
@@ -371,14 +375,14 @@ function runExternalMamSearch() {
                 link.style.textDecoration = 'none';
                 link.style.fontWeight = 'bold';
 
-                if (hasEpub && hasM4b) {
-                    link.textContent = ' [🟢 EPUB & M4B]';
-                    link.style.color = '#507b67';
-                } else if (hasEpub) {
-                    link.textContent = ' [🟢 EPUB]';
-                    link.style.color = '#507b67';
-                } else if (hasM4b) {
-                    link.textContent = ' [🟢 M4B]';
+                const detected = [];
+                if (hasEpub) detected.push('EPUB');
+                if (hasM4b) detected.push('M4B');
+                if (hasPdf) detected.push('PDF');
+                if (hasMp3) detected.push('MP3');
+
+                if (detected.length > 0) {
+                    link.textContent = ` [🟢 ${detected.join(' & ')}]`;
                     link.style.color = '#507b67';
                 } else {
                     link.textContent = ` [🟢 MAM (${count})]`;
