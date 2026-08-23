@@ -117,6 +117,64 @@ function runExternalMamSearch() {
         return { title, author, target, site: 'amazon' };
     }
 
+    function readBabelioBook() {
+        let title = '';
+        let author = '';
+
+        for (const script of document.querySelectorAll('script[type="application/ld+json"]')) {
+            try {
+                const book = findBookInJsonLd(JSON.parse(script.textContent || 'null'));
+                if (book) {
+                    title = normalizeText(book.name);
+                    const authorData = Array.isArray(book.author) ? book.author[0] : book.author;
+                    author = normalizeText(authorData && (authorData.name || authorData));
+                    if (title) break;
+                }
+            } catch (e) {}
+        }
+
+        if (!title) {
+            const titleElement = document.querySelector('h1[itemprop="name"], h1 a, h1');
+            title = normalizeText(titleElement && titleElement.textContent);
+        }
+        if (!author) {
+            const authorElement = document.querySelector('span[itemprop="author"] a, a[itemprop="author"], .livre_auteur a, a[href^="/auteur/"]');
+            author = normalizeText(authorElement && authorElement.textContent);
+        }
+
+        const target = document.querySelector('.livre_boutons, .livre_actions, #livre_presentation, main');
+        return { title, author, target, site: 'babelio' };
+    }
+
+    function readStoryGraphBook() {
+        let title = '';
+        let author = '';
+
+        for (const script of document.querySelectorAll('script[type="application/ld+json"]')) {
+            try {
+                const book = findBookInJsonLd(JSON.parse(script.textContent || 'null'));
+                if (book) {
+                    title = normalizeText(book.name);
+                    const authorData = Array.isArray(book.author) ? book.author[0] : book.author;
+                    author = normalizeText(authorData && (authorData.name || authorData));
+                    if (title) break;
+                }
+            } catch (e) {}
+        }
+
+        if (!title) {
+            const titleElement = document.querySelector('h1');
+            title = normalizeText(titleElement && titleElement.textContent);
+        }
+        if (!author) {
+            const authorElement = document.querySelector('a[href^="/authors/"], a[href^="/author/"]');
+            author = normalizeText(authorElement && authorElement.textContent);
+        }
+
+        const target = document.querySelector('.book-page-actions, .book-actions, [class*="BookActions"], main');
+        return { title, author, target, site: 'storygraph' };
+    }
+
     function createSearchButton(label, query, site, secondary = false) {
         const link = document.createElement('a');
         link.href = buildMamSearchUrl(query);
@@ -155,6 +213,52 @@ function runExternalMamSearch() {
             });
             return link;
         }
+    }
+
+    function fetchTorrentCount(query, callback) {
+        const searchUrl = `https://www.myanonamouse.net/tor/search.php?com[text]=${encodeURIComponent(query)}&com[searchIn][]=title&com[searchIn][]=author`;
+        if (typeof GM_xmlhttpRequest === 'undefined') {
+            callback(null);
+            return;
+        }
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url: searchUrl,
+            onload: function(response) {
+                try {
+                    if (response.responseText.includes('login') || response.responseText.includes('Forgot password')) {
+                        callback(null);
+                        return;
+                    }
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(response.responseText, 'text/html');
+                    const results = doc.querySelectorAll('#ssr tr[id^="tdr"]');
+                    callback(results.length);
+                } catch (e) {
+                    console.debug('[MAM+] Error parsing search count:', e);
+                    callback(null);
+                }
+            },
+            onerror: function() {
+                callback(null);
+            }
+        });
+    }
+
+    function updateButtonWithCount(button, query) {
+        fetchTorrentCount(query, (count) => {
+            if (count === null) return;
+            const labelItem = button.querySelector('.Button__labelItem') || button;
+            const originalLabel = labelItem.textContent.split(' (')[0];
+            if (count > 0) {
+                labelItem.textContent = `${originalLabel} (${count} trouvés)`;
+                button.style.borderColor = '#10b981';
+                button.style.color = '#10b981';
+            } else {
+                labelItem.textContent = `${originalLabel} (aucun résultat)`;
+                button.style.opacity = '0.6';
+            }
+        });
     }
 
     function addButtons(book) {
@@ -210,14 +314,14 @@ function runExternalMamSearch() {
         }
 
         if (book.author) {
-            container.appendChild(
-                createSearchButton('🔎 Rechercher sur MAM (Titre + Auteur)', `${book.title} ${book.author}`, book.site)
-            );
+            const btn = createSearchButton('🔎 Rechercher sur MAM (Titre + Auteur)', `${book.title} ${book.author}`, book.site);
+            container.appendChild(btn);
+            updateButtonWithCount(btn.querySelector('a') || btn, `${book.title} ${book.author}`);
         }
 
-        container.appendChild(
-            createSearchButton('🔎 Rechercher sur MAM (Titre seul)', book.title, book.site, Boolean(book.author))
-        );
+        const btnTitle = createSearchButton('🔎 Rechercher sur MAM (Titre seul)', book.title, book.site, Boolean(book.author));
+        container.appendChild(btnTitle);
+        updateButtonWithCount(btnTitle.querySelector('a') || btnTitle, book.title);
 
         if (book.site === 'goodreads') {
             const secondButton = book.target.children[1];
@@ -239,6 +343,14 @@ function runExternalMamSearch() {
 
         if (host.includes('goodreads.com')) {
             return addButtons(readGoodreadsBook());
+        }
+
+        if (host.includes('babelio.com')) {
+            return addButtons(readBabelioBook());
+        }
+
+        if (host.includes('thestorygraph.com')) {
+            return addButtons(readStoryGraphBook());
         }
 
         if (host.includes('amazon.')) {

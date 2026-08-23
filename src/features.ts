@@ -23,6 +23,7 @@ class InitFeatures {
         new MiniVaultInfo();
         new BonusPointDelta();
         new FixedNav();
+        new ModernTheme();
 
         // Initialize Home Page functions
         new HideNews();

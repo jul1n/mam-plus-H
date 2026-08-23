@@ -339,3 +339,26 @@ class FixedNav implements Feature {
         return this._settings;
     }
 }
+
+/**
+ * ## Toggle the modern MAM+ theme
+ */
+class ModernTheme implements Feature {
+    private _settings: CheckboxSetting = {
+        scope: SettingGroup.Global,
+        type: 'checkbox',
+        title: 'modern_theme',
+        desc: 'Activer le thème MAM+ moderne (interface plate et épurée)',
+    };
+
+    constructor() {
+        Util.startFeature(this._settings, 'body', []).then((t) => {
+            // style.ts handles loading/injecting the class, nothing else to do
+        });
+    }
+
+    get settings(): CheckboxSetting {
+        return this._settings;
+    }
+}
+

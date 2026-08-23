@@ -1,0 +1,354 @@
+// MAM+ Modern Theme styling
+
+.mp_modern {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+
+    // Root variables for colors and styles
+    &.mp_dark {
+        --bg-primary: #121212;
+        --bg-card: #1e1e1e;
+        --bg-card-hover: #262626;
+        --border-color: #2a2a2a;
+        --text-primary: #e0e0e0;
+        --text-secondary: #aaaaaa;
+        --accent-color: #ffd700;
+        --accent-hover: #ffea70;
+        --accent-bg-glow: rgba(255, 215, 0, 0.1);
+        --input-bg: #2d2d2d;
+        --input-border: #404040;
+    }
+
+    &.mp_light {
+        --bg-primary: #f5f6f8;
+        --bg-card: #ffffff;
+        --bg-card-hover: #f9fafb;
+        --border-color: #e5e7eb;
+        --text-primary: #1f2937;
+        --text-secondary: #4b5563;
+        --accent-color: #d97706;
+        --accent-hover: #b45309;
+        --accent-bg-glow: rgba(217, 119, 6, 0.1);
+        --input-bg: #ffffff;
+        --input-border: #d1d5db;
+    }
+
+    // Apply primary background and fonts
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+
+    // Modernize links
+    a {
+        color: var(--accent-color) !important;
+        text-decoration: none !important;
+        transition: color 0.2s ease;
+        &:hover {
+            color: var(--accent-hover) !important;
+            text-decoration: underline !important;
+        }
+    }
+
+    // PreNav bar (search header)
+    #preNav {
+        background-color: var(--bg-card) !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        padding: 10px 20px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+        border-radius: 8px !important;
+        margin: 10px 10px 0 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        height: auto !important;
+
+        .tP {
+            color: var(--text-secondary) !important;
+            font-size: 0.9em !important;
+            font-weight: 500 !important;
+        }
+
+        #mainSearch {
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+
+            input[type="text"] {
+                background: var(--input-bg) !important;
+                border: 1px solid var(--input-border) !important;
+                color: var(--text-primary) !important;
+                border-radius: 20px !important;
+                padding: 6px 16px !important;
+                outline: none !important;
+                transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+
+                &:focus {
+                    border-color: var(--accent-color) !important;
+                    box-shadow: 0 0 0 3px var(--accent-bg-glow) !important;
+                }
+            }
+
+            select {
+                background: var(--input-bg) !important;
+                border: 1px solid var(--input-border) !important;
+                color: var(--text-primary) !important;
+                border-radius: 20px !important;
+                padding: 6px 12px !important;
+                outline: none !important;
+            }
+
+            input[type="submit"] {
+                background: var(--accent-color) !important;
+                color: var(--bg-primary) !important;
+                border: none !important;
+                border-radius: 20px !important;
+                padding: 6px 16px !important;
+                font-weight: bold !important;
+                cursor: pointer !important;
+                transition: background 0.2s ease !important;
+
+                &:hover {
+                    background: var(--accent-hover) !important;
+                }
+            }
+        }
+    }
+
+    // User stat bar
+    #userStat {
+        background-color: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        margin: 10px 10px 0 10px !important;
+        padding: 8px 16px !important;
+        display: flex !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        font-size: 0.95em !important;
+        color: var(--text-secondary) !important;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02) !important;
+
+        a, span {
+            color: var(--text-primary) !important;
+            font-weight: 600 !important;
+        }
+    }
+
+    // Modern navbar (#menu)
+    #mainmenu {
+        margin: 10px 10px 15px 10px !important;
+        background: var(--bg-card) !important;
+        border-radius: 8px !important;
+        border: 1px solid var(--border-color) !important;
+        padding: 4px 8px !important;
+        height: auto !important;
+
+        #menu {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+
+            & > li {
+                & > a {
+                    padding: 8px 16px !important;
+                    display: block !important;
+                    font-weight: 600 !important;
+                    color: var(--text-primary) !important;
+                    border-radius: 6px !important;
+                    transition: background 0.2s ease, color 0.2s ease !important;
+                    background: transparent !important;
+                    border: none !important;
+
+                    &:hover {
+                        background: var(--bg-card-hover) !important;
+                        color: var(--accent-color) !important;
+                    }
+                }
+            }
+        }
+    }
+
+    // Cards (.blockCon)
+    .blockCon {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+        margin-bottom: 20px !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+
+        .blockHead {
+            background: var(--bg-card-hover) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            padding: 12px 20px !important;
+            height: auto !important;
+
+            .blockHeadCon h4 {
+                margin: 0 !important;
+                font-size: 1.1em !important;
+                font-weight: 700 !important;
+                color: var(--text-primary) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+            }
+        }
+
+        .blockBody {
+            background: transparent !important;
+            border: none !important;
+            padding: 16px 20px !important;
+        }
+
+        .blockFoot, .bHi {
+            display: none !important; // Hide old decorative elements
+        }
+    }
+
+    // Modernize Tables
+    table {
+        border-collapse: collapse !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+
+        th, td {
+            padding: 12px 16px !important;
+            border-bottom: 1px solid var(--border-color) !important;
+            text-align: left !important;
+        }
+
+        tr {
+            background: transparent !important;
+            transition: background 0.2s ease !important;
+            &:hover {
+                background: var(--bg-card-hover) !important;
+            }
+        }
+
+        .row1, .alternateColor {
+            background: transparent !important;
+        }
+        
+        .row2 {
+            background: var(--bg-card-hover) !important;
+            font-weight: 600 !important;
+        }
+    }
+
+    // Modernize forms, details, and buttons
+    input[type="text"], input[type="number"], select, textarea {
+        background: var(--input-bg) !important;
+        border: 1px solid var(--input-border) !important;
+        color: var(--text-primary) !important;
+        border-radius: 6px !important;
+        padding: 8px 12px !important;
+        outline: none !important;
+        transition: border-color 0.2s ease !important;
+        font-family: inherit !important;
+
+        &:focus {
+            border-color: var(--accent-color) !important;
+        }
+    }
+
+    // Details/Summary elements on search page
+    details {
+        background: var(--bg-card-hover) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 8px !important;
+        padding: 12px 16px !important;
+        margin: 10px 0 !important;
+
+        summary {
+            font-weight: bold !important;
+            cursor: pointer !important;
+            outline: none !important;
+            color: var(--text-primary) !important;
+        }
+    }
+
+    // Category Grid
+    .categoryColumns {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important;
+        gap: 8px !important;
+        border: none !important;
+        padding: 10px 0 !important;
+
+        label {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-color) !important;
+            padding: 8px 12px !important;
+            border-radius: 6px !important;
+            cursor: pointer !important;
+            transition: all 0.2s ease !important;
+
+            &:hover {
+                background: var(--bg-card-hover) !important;
+                border-color: var(--accent-color) !important;
+            }
+
+            input[type="checkbox"] {
+                accent-color: var(--accent-color) !important;
+            }
+        }
+    }
+
+    // Shoutbox
+    #shoutbox {
+        border-radius: 8px !important;
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+
+        .sbf {
+            background: transparent !important;
+            padding: 12px !important;
+        }
+
+        #sbform {
+            display: flex !important;
+            gap: 8px !important;
+            padding: 10px !important;
+            border-top: 1px solid var(--border-color) !important;
+
+            input[type="text"] {
+                flex-grow: 1 !important;
+            }
+
+            input[type="submit"] {
+                background: var(--accent-color) !important;
+                color: var(--bg-primary) !important;
+                border: none !important;
+                border-radius: 6px !important;
+                padding: 8px 16px !important;
+                font-weight: bold !important;
+                cursor: pointer !important;
+            }
+        }
+    }
+
+    // ServLoadBar
+    .servLoadBar {
+        background: var(--border-color) !important;
+        border-radius: 4px !important;
+        height: 8px !important;
+        overflow: hidden !important;
+        margin-top: 4px !important;
+
+        & > div {
+            height: 100% !important;
+            border-radius: 4px !important;
+            
+            &.green { background-color: #10b981 !important; }
+            &.yellow { background-color: #f59e0b !important; }
+            &.red { background-color: #ef4444 !important; }
+        }
+    }
+}
