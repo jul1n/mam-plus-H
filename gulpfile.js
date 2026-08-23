@@ -108,6 +108,7 @@ const procTS_dev = () => {
     const loc = basePathEnv();
     tsSettings.outFile = loc.name;
     const timestamp = buildTime();
+    const externalSearchCode = Fs.readFileSync('src/external_search.js', 'utf8');
     return pump(
         Gulp.src(globs.app, { base: 'src' }),
         // Start sourcemaps
@@ -116,6 +117,10 @@ const procTS_dev = () => {
         Inject.replace('##meta_timestamp##', timestamp),
         // Compile typescript
         Ts(tsSettings),
+        Inject.wrap(
+            "(function mamPlusHRouter() {\n    'use strict';\n    const host = window.location.hostname.toLowerCase();\n    const isMam = host === 'myanonamouse.net' || host.endsWith('.myanonamouse.net');\n    if (isMam) {\n",
+            `\n        return;\n    }\n\n${externalSearchCode}\n})();`
+        ),
         // Write sourcemap
         Srcmap.write(),
         Gulp.dest(loc.dest),
@@ -128,10 +133,15 @@ const procTS_release = () => {
     const loc = basePathEnv();
     tsSettings.outFile = loc.name;
     const timestamp = buildTime();
+    const externalSearchCode = Fs.readFileSync('src/external_search.js', 'utf8');
     return pump(
         Gulp.src(globs.app),
         Inject.replace('##meta_timestamp##', timestamp),
         Ts(tsSettings),
+        Inject.wrap(
+            "(function mamPlusHRouter() {\n    'use strict';\n    const host = window.location.hostname.toLowerCase();\n    const isMam = host === 'myanonamouse.net' || host.endsWith('.myanonamouse.net');\n    if (isMam) {\n",
+            `\n        return;\n    }\n\n${externalSearchCode}\n})();`
+        ),
         Gulp.dest(loc.dest),
         (err) => errorCB(err)
     );

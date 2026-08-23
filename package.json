@@ -1,7 +1,7 @@
 {
     "name": "mam-plus-H",
-    "version": "4.4.4",
-    "description": "Tweaks and features for MAM",
+    "version": "4.5.0",
+    "description": "MAM+ with Goodreads and Amazon → MyAnonamouse search",
     "author": "jul1n",
     "repository": {
         "type": "git",

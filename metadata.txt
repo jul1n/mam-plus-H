@@ -4,24 +4,23 @@
 // @version      <%= pkg.version %>
 // @description  <%= pkg.description %>
 // @author       <%= pkg.author %>
+// @homepageURL  https://github.com/jul1n/mam-plus-H
+// @supportURL   https://github.com/jul1n/mam-plus-H/issues
+// @updateURL    https://raw.githubusercontent.com/jul1n/mam-plus-H/master/release/mam-plus-H.user.js
+// @downloadURL  https://raw.githubusercontent.com/jul1n/mam-plus-H/master/release/mam-plus-H.user.js
 // @run-at       document-start
-// @include      https://*.myanonamouse.net/*
-// @include      https://*.goodreads.com/book/show/*
-// @include      https://*.goodreads.com/en/book/show/*
-// @include      https://*.goodreads.com/es/book/show/*
-// @include      https://*.goodreads.com/fr/book/show/*
-// @include      https://*.goodreads.com/it/book/show/*
-// @include      https://*.goodreads.com/de/book/show/*
-// @include      https://*.amazon.com/dp/*
-// @include      https://*.amazon.com/*/dp/*
-// @include      https://*.amazon.co.uk/dp/*
-// @include      https://*.amazon.co.uk/*/dp/*
-// @include      https://*.amazon.fr/dp/*
-// @include      https://*.amazon.fr/*/dp/*
-// @include      https://*.amazon.ca/dp/*
-// @include      https://*.amazon.ca/*/dp/*
-// @include      https://*.amazon.de/dp/*
-// @include      https://*.amazon.de/*/dp/*
+// @match        https://*.myanonamouse.net/*
+// @match        https://www.goodreads.com/book/show/*
+// @match        https://www.goodreads.com/*/book/show/*
+// @match        https://*.amazon.com/*
+// @match        https://*.amazon.co.uk/*
+// @match        https://*.amazon.fr/*
+// @match        https://*.amazon.de/*
+// @match        https://*.amazon.es/*
+// @match        https://*.amazon.it/*
+// @match        https://*.amazon.ca/*
+// @match        https://*.amazon.nl/*
+// @match        https://*.amazon.com.be/*
 // @exclude      https://cdn.myanonamouse.net/*
 // @icon         https://i.imgur.com/dX44pSv.png
 // @resource     MP_CSS https://raw.githubusercontent.com/jul1n/mam-plus-H/master/release/main.css?v=<%= pkg.version %>

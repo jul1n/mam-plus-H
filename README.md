@@ -1,8 +1,10 @@
-# MAM+
+# MAM+ (mam-plus-H)
 
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/gardenshade/mam-plus?label=version)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/jul1n/mam-plus-H?label=version)
 
-No it's not some elite club. It's just a simple set of features, tweaks, and occasional bug fixes that modifies (and hopefully enhances) your MAM experience. Very occasionally it might break your MAM experience, but we try to keep those incidents to a minimum... Nearly every feature can be enabled or disabled separately, and only one is enabled by default, meaning you can stick with a near-Vanilla experience if you so desire.
+A custom fork of MAM+ containing:
+- Tweaks and enhancements for MyAnonamouse (MAM).
+- **Goodreads & Amazon → MAM integration**: Automatically adds 🔎 search buttons directly on Goodreads book pages (within the sidebar) and Amazon product pages, allowing you to instantly search for the corresponding torrents on MAM (supporting title-only and title+author searches).
 
 Don't know what MAM is? This script won't be very useful to you then.
 

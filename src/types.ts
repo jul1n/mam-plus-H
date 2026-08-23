@@ -14,9 +14,7 @@ type ValidPage =
     | 'upload'
     | 'forum thread'
     | 'settings'
-    | 'new users'
-    | 'goodreads'
-    | 'amazon';
+    | 'new users';
 
 type BookData = 'book' | 'author' | 'series';
 

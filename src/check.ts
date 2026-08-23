@@ -151,12 +151,7 @@ class Check {
                 }
                 // Check.page() has not previous run
             } else {
-                if (window.location.hostname.includes('goodreads.com')) {
-                    currentPage = 'goodreads';
-                } else if (window.location.hostname.includes('amazon.')) {
-                    currentPage = 'amazon';
-                } else {
-                    // Get the current page
+                // Get the current page
                     let path: string = window.location.pathname;
                     path = path.indexOf('.php') ? path.split('.php')[0] : path;
                     const page = path.split('/');
@@ -190,10 +185,7 @@ class Check {
                     // Check to see if we have a case that matches the current page
                     if (cases[page[0]]) {
                         currentPage = cases[page[0]]();
-                    } else {
-                        console.warn(`Page "${page}" is not a valid M+ page. Path: ${path}`);
                     }
-                }
 
                 if (currentPage !== undefined) {
                     // Save the current page to be accessed later
