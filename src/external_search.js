@@ -211,12 +211,12 @@ function runExternalMamSearch() {
 
         if (book.author) {
             container.appendChild(
-                createSearchButton('🔎 Search MAM (Title + Author)', `${book.title} ${book.author}`, book.site)
+                createSearchButton('🔎 Rechercher sur MAM (Titre + Auteur)', `${book.title} ${book.author}`, book.site)
             );
         }
 
         container.appendChild(
-            createSearchButton('🔎 Search MAM (Title Only)', book.title, book.site, Boolean(book.author))
+            createSearchButton('🔎 Rechercher sur MAM (Titre seul)', book.title, book.site, Boolean(book.author))
         );
 
         if (book.site === 'goodreads') {
