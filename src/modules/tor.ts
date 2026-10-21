@@ -283,7 +283,13 @@ class CurrentlyReading implements Feature {
      */
     private _buildButton(tar: HTMLDivElement, content: string): HTMLDivElement {
         // Build text display
-        tar.innerHTML = `<textarea rows="1" cols="80" style='margin-right:5px'>${content}</textarea>`;
+        // content contains the torrent title/authors (uploader-controlled): never parse it as HTML
+        const textArea = document.createElement('textarea');
+        textArea.rows = 1;
+        textArea.cols = 80;
+        textArea.style.marginRight = '5px';
+        textArea.value = content;
+        tar.replaceChildren(textArea);
         // Build button
         Util.createButtonElement(
             '',
