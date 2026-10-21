@@ -918,13 +918,9 @@ class QuickShout implements Feature {
                     //was having issue with eval processing the .replace data so made a variable to intake it
                     const replacedText = comboBoxInput.value.replace(/ /g, 'ಠ');
                     //fun way to dynamically create statements - this takes whatever is in list field to create a key with that text and the value from the textarea
-                    eval(
-                        `jsonList.` +
-                        replacedText +
-                        `= "` +
-                        encodeURIComponent(quickShoutText.value) +
-                        `";`
-                    );
+                    // Affectation directe : aucune évaluation de code à partir de la saisie.
+                    (jsonList as Record<string, string>)[replacedText] =
+                        encodeURIComponent(quickShoutText.value);
                     //overwrite or create the GM variable with new jsonList
                     GM_setValue('mp_quickShout', JSON.stringify(jsonList));
                     //re-style save button to green now that its saved as-is
